@@ -1,0 +1,52 @@
+import { ArrowDown } from "lucide-react";
+import { IMAGES } from "../data";
+import { AnimatedText } from "./ui/AnimatedText";
+import { LiquidMetalButton } from "./ui/liquid-metal-button";
+
+interface Props {
+  onNext: () => void;
+}
+
+export default function Dobra1Hero({ onNext }: Props) {
+  return (
+    <div className="w-full relative pt-2 pb-2 md:pt-4 md:pb-6 text-center z-10 space-y-8 md:space-y-12">
+      
+
+      {/* Main Hero Header Title */}
+      <div className="space-y-6 max-w-5xl mx-auto pt-6 px-4 text-center">
+        <AnimatedText
+          as="h1"
+          text="Um ambiente onde o básico é escalável e crescer é inevitável."
+          highlights={["crescer é inevitável."]}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-extrabold tracking-tight text-white leading-tight max-w-5xl mx-auto"
+        />
+        <AnimatedText
+          as="p"
+          text="Conectamos o poder da autoridade à estratégia de marketing de resposta direta."
+          initialDelayMs={400}
+          className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto font-sans font-medium"
+        />
+      </div>
+
+      {/* Large Loose-standing Placas Image (No wrappers, no containers, completely loose and raw) */}
+      <div className="pt-4 max-w-3xl mx-auto">
+        <img
+          src={IMAGES.placas}
+          alt="Resultados de Faturamento"
+          referrerPolicy="no-referrer"
+          className="w-full h-auto object-contain block mx-auto transition-transform duration-500 hover:scale-[1.01]"
+        />
+      </div>
+
+      {/* Flow indicator */}
+      <div className="pt-2 flex justify-center">
+        <LiquidMetalButton
+          onClick={onNext}
+          label="Conheça Nossa Atuação"
+          icon={<ArrowDown size={14} className="text-[#41F20A] animate-bounce" />}
+        />
+      </div>
+
+    </div>
+  );
+}

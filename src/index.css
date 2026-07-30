@@ -1,0 +1,33 @@
+@import url('https://api.fontshare.com/v2/css?f[]=nohemi@900,800,700,600,500,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: "Nohemi", "Space Grotesk", sans-serif;
+  --font-nohemi: "Nohemi", "Space Grotesk", sans-serif;
+  --font-mono: "Space Grotesk", monospace;
+}
+
+html, body {
+  font-family: "Space Grotesk", sans-serif;
+  scroll-behavior: smooth;
+  background-color: #000000;
+}
+
+/* Custom CSS to hide scrollbars elegantly for a more minimal look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #1B4D3E;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
+
