@@ -1,4 +1,105 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
+interface ServiceCardProps {
+  key?: React.Key;
+  title: string;
+  description: string;
+  index: number;
+  colSpan?: string;
+  isVisible: boolean;
+  prefersReducedMotion: boolean;
+  className?: string;
+}
+
+function ServiceCard({
+  title,
+  description,
+  index,
+  colSpan = "lg:col-span-1",
+  isVisible,
+  prefersReducedMotion,
+  className = "",
+}: ServiceCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion || window.innerWidth < 1024) return;
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setMousePos({ x, y });
+
+    // Calculate subtle 3D tilt (-3.5 deg to +3.5 deg)
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateY = ((x - centerX) / centerX) * 3.5;
+    const rotateX = -((y - centerY) / centerY) * 3.5;
+    setTilt({ rotateX, rotateY });
+  };
+
+  const handleMouseEnter = () => {
+    if (prefersReducedMotion || window.innerWidth < 1024) return;
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setTilt({ rotateX: 0, rotateY: 0 });
+  };
+
+  const delay = 250 + index * 80;
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`relative group bg-zinc-950/90 border border-zinc-800/90 hover:border-[#41F20A]/40 rounded-2xl p-6 sm:p-8 backdrop-blur-xl overflow-hidden shadow-2xl transition-all duration-300 flex flex-col justify-center ${colSpan} ${className}`}
+      style={{
+        transform:
+          isVisible || prefersReducedMotion
+            ? `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) translateY(0)`
+            : "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(24px)",
+        opacity: isVisible || prefersReducedMotion ? 1 : 0,
+        filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+        transition: prefersReducedMotion
+          ? "none"
+          : `opacity 0.6s ease-out ${delay}ms, transform 0.2s ease-out, border-color 0.3s ease, filter 0.6s ease-out ${delay}ms`,
+      }}
+    >
+      {/* Radial Spotlight Effect following cursor */}
+      <div
+        className="pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-300 z-0"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(65, 242, 10, 0.12), transparent 70%)`,
+        }}
+      />
+
+      {/* Subtle Top Accent Line */}
+      <div
+        className="pointer-events-none absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#41F20A] to-transparent transition-opacity duration-300 z-10"
+        style={{ opacity: isHovered ? 1 : 0.25 }}
+      />
+
+      {/* Card Content */}
+      <div className="relative z-10 space-y-3 sm:space-y-4">
+        <h3 className="text-xl sm:text-2xl font-bold font-heading text-[#41F20A] tracking-tight drop-shadow-[0_0_12px_rgba(65,242,10,0.3)]">
+          {title}
+        </h3>
+
+        <p className="text-sm sm:text-base text-zinc-300 font-sans leading-relaxed font-normal">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function DobraSobreNos() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -21,7 +122,7 @@ export default function DobraSobreNos() {
           if (sectionRef.current) observer.unobserve(sectionRef.current);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.15 }
     );
 
     if (sectionRef.current) {
@@ -36,7 +137,6 @@ export default function DobraSobreNos() {
     "A maioria das autoridades do mercado possui um conhecimento extraordinário, mas peca na falta de infraestrutura, escala comercial e previsibilidade de receita.";
 
   // Bloco 2 Text Parts (A virada)
-  // "A Dominus nasce como o " [motor estratégico e operacional] " que assume a complexidade dos bastidores para que você foque apenas no seu " [genius zone] "."
   const block2Words = [
     { word: "A", type: "normal" },
     { word: "Dominus", type: "normal" },
@@ -72,16 +172,18 @@ export default function DobraSobreNos() {
       id="sobre-nos"
       className="w-full bg-[#0a0a0a] py-[clamp(80px,10vh,140px)] px-4 sm:px-6 md:px-12 relative overflow-hidden border-t border-zinc-900/80 scroll-mt-20"
     >
-      {/* Subtle Static Ambient Background Glow (No grid, no mouse tracking) */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-[#41F20A]/5 rounded-full blur-[140px] pointer-events-none" />
+      {/* Subtle Static Ambient Background Glow */}
+      <div className="absolute top-1/3 left-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-[#41F20A]/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        
+        {/* UNIFIED 3-COLUMN BENTO GRID - PERFECT VERTICAL & HORIZONTAL ALIGNMENT */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
           
-          {/* COLUNA ESQUERDA (60% / 7 cols) - Texto Principal / Tese */}
-          <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+          {/* ROW 1 LEFT (2 Cols) - Texto Principal "Sobre Nós" */}
+          <div className="lg:col-span-2 flex flex-col justify-center space-y-6 sm:space-y-8 p-1 sm:p-2">
             
-            {/* Eyebrow - estilo Onde Atuamos */}
+            {/* Eyebrow */}
             <div className="text-[#41F20A] text-sm sm:text-base md:text-lg font-extrabold tracking-[0.25em] font-heading drop-shadow-[0_0_15px_rgba(65,242,10,0.4)] uppercase">
               SOBRE NÓS
             </div>
@@ -96,7 +198,8 @@ export default function DobraSobreNos() {
                     className="inline-block mr-[0.25em]"
                     style={{
                       opacity: isVisible || prefersReducedMotion ? 1 : 0,
-                      transform: isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
+                      transform:
+                        isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
                       filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
                       transition: prefersReducedMotion
                         ? "none"
@@ -123,7 +226,8 @@ export default function DobraSobreNos() {
                       className="inline-block mr-[0.25em] italic text-[#41F20A] font-extrabold underline decoration-[#41F20A]/70 underline-offset-8 drop-shadow-[0_0_16px_rgba(65,242,10,0.5)] font-heading"
                       style={{
                         opacity: isVisible || prefersReducedMotion ? 1 : 0,
-                        transform: isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
+                        transform:
+                          isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
                         filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
                         transition: prefersReducedMotion
                           ? "none"
@@ -142,7 +246,8 @@ export default function DobraSobreNos() {
                       className="inline-block mr-[0.25em] text-[#41F20A] font-bold drop-shadow-[0_0_12px_rgba(65,242,10,0.4)]"
                       style={{
                         opacity: isVisible || prefersReducedMotion ? 1 : 0,
-                        transform: isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
+                        transform:
+                          isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
                         filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
                         transition: prefersReducedMotion
                           ? "none"
@@ -160,7 +265,8 @@ export default function DobraSobreNos() {
                     className="inline-block mr-[0.25em]"
                     style={{
                       opacity: isVisible || prefersReducedMotion ? 1 : 0,
-                      transform: isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
+                      transform:
+                        isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
                       filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
                       transition: prefersReducedMotion
                         ? "none"
@@ -175,52 +281,61 @@ export default function DobraSobreNos() {
 
           </div>
 
-          {/* COLUNA DIREITA (40% / 5 cols) - Elemento Visual de Apoio */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <div className="w-full max-w-md bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 backdrop-blur-xl relative overflow-hidden shadow-2xl space-y-6">
-              
-              {/* Top Accent Line */}
-              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#41F20A] to-transparent" />
+          {/* ROW 1 RIGHT (1 Col) - CARD ESTRUTURA DE FUNIL */}
+          <ServiceCard
+            index={0}
+            title="Estrutura de Funil"
+            description="Página bonita não vende sozinha. Arquitetura de funil pensada de ponta a ponta — páginas, sequência, checkout — pra cada etapa empurrar a próxima."
+            colSpan="lg:col-span-1"
+            isVisible={isVisible}
+            prefersReducedMotion={prefersReducedMotion}
+            className="h-full min-h-[220px]"
+          />
 
-              {/* Subdued Logo / Brand Indicator */}
-              <div className="flex items-center justify-between pb-4 border-b border-zinc-900">
-                <img
-                  src="https://i.ibb.co/chkPHKnw/logo-extensa-branca.webp"
-                  alt="DOMINUS"
-                  className="h-4 w-auto object-contain opacity-80"
-                />
-                <span className="text-[10px] font-mono text-[#41F20A] tracking-widest uppercase px-2.5 py-1 rounded-full bg-[#41F20A]/10 border border-[#41F20A]/30">
-                  ENGANHARIA & ESCALA
-                </span>
-              </div>
+          {/* ROW 2 LEFT (2 Cols) - TRÁFEGO & AQUISIÇÃO */}
+          <ServiceCard
+            index={1}
+            title="Tráfego & Aquisição"
+            description="Não escalamos por sorte. Gestão de tráfego pago com decisão orientada a dado, testando ângulo, público e criativo até achar o que realmente converte."
+            colSpan="lg:col-span-2"
+            isVisible={isVisible}
+            prefersReducedMotion={prefersReducedMotion}
+          />
 
-              {/* Big Supporting Metric & Quote */}
-              <div className="space-y-3">
-                <div className="text-4xl sm:text-5xl font-black font-heading tracking-tight text-white flex items-baseline gap-2">
-                  <span>100%</span>
-                  <span className="text-sm font-sans font-medium text-zinc-400">foco no seu Genius Zone</span>
-                </div>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">
-                  Assumimos toda a estratégia, tecnologia, tráfego pago, cópias de Direct Response e gestão comercial para que você construa equity real.
-                </p>
-              </div>
+          {/* ROW 2 RIGHT (1 Col) - EDIÇÃO & CRIATIVOS */}
+          <ServiceCard
+            index={2}
+            title="Edição & Criativos"
+            description="Criativo não é estética, é performance. Edição pensada pra reter atenção nos primeiros segundos e conduzir até a conversão."
+            colSpan="lg:col-span-1"
+            isVisible={isVisible}
+            prefersReducedMotion={prefersReducedMotion}
+          />
 
-              {/* Placeholder / Team Badge */}
-              <div className="pt-2 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-zinc-900 border border-[#41F20A]/40 flex items-center justify-center text-[#41F20A] font-bold font-mono text-xs shadow-[0_0_10px_rgba(65,242,10,0.2)]">
-                  DR
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-white font-heading">DOMINUS COPRODUÇÃO</div>
-                  <div className="text-[10px] text-zinc-500 font-mono">Infraestrutura & Direct Response</div>
-                </div>
-              </div>
+          {/* ROW 3 LEFT (2 Cols) - COPY QUE VENDE */}
+          <ServiceCard
+            index={3}
+            title="Copy que Vende"
+            description="Cada palavra tem uma função: gerar clique, gerar confiança ou gerar venda. Copy estruturada pra cada etapa da jornada, do anúncio ao pós-venda."
+            colSpan="lg:col-span-2"
+            isVisible={isVisible}
+            prefersReducedMotion={prefersReducedMotion}
+          />
 
-            </div>
-          </div>
+          {/* ROW 3 RIGHT (1 Col) - GESTÃO DE ATENDIMENTO */}
+          <ServiceCard
+            index={4}
+            title="Gestão de Atendimento"
+            description="Lead esfriando é receita perdida. Atendimento estruturado, com script, follow-up e conversão trabalhada em cada ponto de contato."
+            colSpan="lg:col-span-1"
+            isVisible={isVisible}
+            prefersReducedMotion={prefersReducedMotion}
+          />
 
         </div>
+
       </div>
     </section>
   );
 }
+
