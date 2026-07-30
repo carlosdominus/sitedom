@@ -1,132 +1,94 @@
 import { useEffect, useRef, useState } from "react";
+import { AnimatedText } from "./ui/AnimatedText";
 
 export default function Dobra8WavingFlag() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const [isInteracting, setIsInteracting] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const [textureLoaded, setTextureLoaded] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
 
-  // Interaction coordinates and strength
-  const pointerRef = useRef({
-    x: -1000,
-    y: -1000,
-    active: false,
-    strength: 0,
-    targetStrength: 0,
-  });
+  // Interaction coordinates and impulse strength
+  const pointerRef = useRef({ x: -1000, y: -1000, strength: 0, targetStrength: 0 });
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
+    if (!containerRef.current || !canvasRef.current) return;
 
-    const ctx = canvas.getContext("2d", { willReadFrequently: false });
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Grid resolution (36 cols, 24 rows)
-    const COLS = 36;
-    const ROWS = 22;
+    // Grid resolution
+    const isMobile = window.innerWidth < 640;
+    const COLS = isMobile ? 18 : 32;
+    const ROWS = isMobile ? 12 : 20;
 
-    // Offscreen canvas for the flag texture
+    // Offscreen Canvas for generating the flag cloth texture image
     const textureCanvas = document.createElement("canvas");
-    const texCtx = textureCanvas.getContext("2d");
-    
-    const TEX_WIDTH = 1400;
-    const TEX_HEIGHT = 800;
+    const TEX_WIDTH = 1200;
+    const TEX_HEIGHT = 700;
     textureCanvas.width = TEX_WIDTH;
     textureCanvas.height = TEX_HEIGHT;
+    const texCtx = textureCanvas.getContext("2d");
 
-    // Function to render the flag texture on offscreen canvas
-    const createFlagTexture = (logoImg?: HTMLImageElement) => {
-      if (!texCtx) return;
-
-      // Dark silk/satin luxury background gradient
+    // Pre-render Flag Design onto offscreen canvas texture
+    if (texCtx) {
+      // 1. Dark Clean Premium Canvas
       const bgGrad = texCtx.createLinearGradient(0, 0, TEX_WIDTH, TEX_HEIGHT);
-      bgGrad.addColorStop(0, "#080808");
-      bgGrad.addColorStop(0.5, "#121212");
-      bgGrad.addColorStop(1, "#0a0a0a");
+      bgGrad.addColorStop(0, "#080b06");
+      bgGrad.addColorStop(0.5, "#000000");
+      bgGrad.addColorStop(1, "#080b06");
       texCtx.fillStyle = bgGrad;
       texCtx.fillRect(0, 0, TEX_WIDTH, TEX_HEIGHT);
 
-      // Subtle diagonal carbon weave lines
-      texCtx.strokeStyle = "rgba(255, 255, 255, 0.03)";
-      texCtx.lineWidth = 1;
-      for (let i = -TEX_HEIGHT; i < TEX_WIDTH; i += 24) {
-        texCtx.beginPath();
-        texCtx.moveTo(i, 0);
-        texCtx.lineTo(i + TEX_HEIGHT, TEX_HEIGHT);
-        texCtx.stroke();
-      }
-
-      // Flag top & bottom neon green subtle border stroke
-      texCtx.strokeStyle = "#41F20A";
-      texCtx.lineWidth = 8;
-      texCtx.shadowColor = "#41F20A";
-      texCtx.shadowBlur = 16;
-
-      texCtx.beginPath();
-      texCtx.moveTo(0, 4);
-      texCtx.lineTo(TEX_WIDTH, 4);
-      texCtx.moveTo(0, TEX_HEIGHT - 4);
-      texCtx.lineTo(TEX_WIDTH, TEX_HEIGHT - 4);
-      texCtx.stroke();
-      texCtx.shadowBlur = 0; // Reset shadow
-
-      // Center decorative watermark / glow
-      const radialGlow = texCtx.createRadialGradient(
-        TEX_WIDTH / 2, TEX_HEIGHT / 2, 80,
-        TEX_WIDTH / 2, TEX_HEIGHT / 2, 500
+      // 2. Subtle Green Glow Center Beam
+      const beamGrad = texCtx.createRadialGradient(
+        TEX_WIDTH / 2, TEX_HEIGHT / 2, 50,
+        TEX_WIDTH / 2, TEX_HEIGHT / 2, 480
       );
-      radialGlow.addColorStop(0, "rgba(65, 242, 10, 0.15)");
-      radialGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
-      texCtx.fillStyle = radialGlow;
+      beamGrad.addColorStop(0, "rgba(65, 242, 10, 0.12)");
+      beamGrad.addColorStop(0.5, "rgba(65, 242, 10, 0.03)");
+      beamGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      texCtx.fillStyle = beamGrad;
       texCtx.fillRect(0, 0, TEX_WIDTH, TEX_HEIGHT);
 
-      // Draw company logo if loaded, or draw stylized vector DOMINUS logo
-      if (logoImg && logoImg.complete && logoImg.naturalWidth > 0) {
-        const logoAspect = logoImg.naturalWidth / logoImg.naturalHeight;
-        const targetWidth = 780;
-        const targetHeight = targetWidth / logoAspect;
-        const x = (TEX_WIDTH - targetWidth) / 2;
-        const y = (TEX_HEIGHT - targetHeight) / 2;
-        
-        // Glow effect behind white logo
-        texCtx.shadowColor = "rgba(65, 242, 10, 0.6)";
-        texCtx.shadowBlur = 35;
-        texCtx.drawImage(logoImg, x, y, targetWidth, targetHeight);
-        texCtx.shadowBlur = 0;
-      } else {
-        // Fallback DOMINUS text logo
+      // 3. Draw Dominus White Logo in Center
+      const logoImg = new Image();
+      logoImg.src = "https://i.ibb.co/chkPHKnw/logo-extensa-branca.webp";
+      
+      const renderLogoAndText = () => {
+        const logoWidth = 580;
+        const logoHeight = (logoImg.height / logoImg.width) * logoWidth || 160;
+        const logoX = (TEX_WIDTH - logoWidth) / 2;
+        const logoY = (TEX_HEIGHT - logoHeight) / 2 - 15;
+
+        texCtx.save();
+        texCtx.shadowColor = "rgba(65, 242, 10, 0.4)";
+        texCtx.shadowBlur = 18;
+        texCtx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
+        texCtx.restore();
+
+        // White Subtitle slogan in Space Grotesk directly below logo: "VENDER, CRESCER E DOMINAR"
         texCtx.fillStyle = "#FFFFFF";
-        texCtx.font = "900 96px 'Plus Jakarta Sans', sans-serif";
+        texCtx.font = "700 22px 'Space Grotesk', sans-serif";
         texCtx.textAlign = "center";
-        texCtx.textBaseline = "middle";
         texCtx.letterSpacing = "8px";
-        texCtx.fillText("DOMINUS", TEX_WIDTH / 2, TEX_HEIGHT / 2 - 25);
+        texCtx.shadowColor = "rgba(0, 0, 0, 0.8)";
+        texCtx.shadowBlur = 10;
+        texCtx.fillText("VENDER, CRESCER E DOMINAR", TEX_WIDTH / 2, logoY + logoHeight + 42);
 
-        texCtx.fillStyle = "#41F20A";
-        texCtx.font = "700 24px 'Plus Jakarta Sans', sans-serif";
-        texCtx.letterSpacing = "10px";
-        texCtx.fillText("ENGENHARIA DE ESCALA", TEX_WIDTH / 2, TEX_HEIGHT / 2 + 55);
-      }
+        setTextureLoaded(true);
+      };
 
-      // Small brand tagline in top right corner of flag
-      texCtx.fillStyle = "rgba(255, 255, 255, 0.4)";
-      texCtx.font = "600 16px monospace";
-      texCtx.textAlign = "right";
-      texCtx.fillText("VENDER, CRESCER E DOMINAR", TEX_WIDTH - 40, 45);
-
-      setTextureLoaded(true);
-    };
-
-    // Load company logo image
-    const logoImg = new Image();
-    logoImg.crossOrigin = "anonymous";
-    logoImg.src = "https://i.ibb.co/chkPHKnw/logo-extensa-branca.webp";
-    logoImg.onload = () => createFlagTexture(logoImg);
-    logoImg.onerror = () => createFlagTexture(); // Fallback if blocked
-    createFlagTexture(); // Initial draw with vector text
+      logoImg.onload = () => {
+        if (typeof document !== "undefined" && document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(renderLogoAndText).catch(renderLogoAndText);
+        } else {
+          renderLogoAndText();
+        }
+      };
+    }
 
     // Grid vertices structure
     interface Vertex {
@@ -136,27 +98,24 @@ export default function Dobra8WavingFlag() {
       y: number;
       u: number;
       v: number;
-      pin: number; // 0 at flagpole (left), 1 at free end (right)
+      pin: number;
     }
 
     let width = 0;
     let height = 0;
     let grid: Vertex[][] = [];
-
-    // Pole dimensions (Minimalist thin pole)
     let POLE_WIDTH = 5;
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       
       width = rect.width;
       POLE_WIDTH = width < 640 ? 3 : 5;
       
-      // Full screen aspect scale for flag
-      height = Math.min(rect.width * 0.55, 760);
+      height = Math.min(rect.width * 0.55, 720);
       if (width < 640) {
-        height = Math.min(rect.width * 0.68, 480);
+        height = Math.min(rect.width * 0.65, 420);
       }
 
       canvas.width = Math.round(width * dpr);
@@ -167,9 +126,9 @@ export default function Dobra8WavingFlag() {
       ctx.scale(dpr, dpr);
 
       // Build grid mesh
-      const flagMarginLeft = POLE_WIDTH + 24;
-      const flagMarginTop = 35;
-      const flagWidth = width - flagMarginLeft - 30;
+      const flagMarginLeft = POLE_WIDTH + 18;
+      const flagMarginTop = 25;
+      const flagWidth = width - flagMarginLeft - 20;
       const flagHeight = height - flagMarginTop * 2;
 
       grid = [];
@@ -181,10 +140,7 @@ export default function Dobra8WavingFlag() {
         for (let c = 0; c <= COLS; c++) {
           const u = c / COLS;
           const baseX = flagMarginLeft + u * flagWidth;
-
-          // Pin factor: 0 at c=0 (flagpole), ramping up quickly to 1.0
-          // Makes the left edge tightly pinned to the pole rings
-          const pin = Math.pow(u, 1.15);
+          const pin = Math.pow(u, 1.2);
 
           rowArr.push({
             baseX,
@@ -204,7 +160,7 @@ export default function Dobra8WavingFlag() {
     resizeObserver.observe(container);
     resize();
 
-    // Helper function to draw a single textured triangle on 2D Canvas using affine matrix
+    // Helper to draw textured triangle on 2D Canvas
     const drawTexturedTriangle = (
       p0: { x: number; y: number },
       p1: { x: number; y: number },
@@ -238,7 +194,6 @@ export default function Dobra8WavingFlag() {
 
       ctx.restore();
 
-      // Apply cloth fold lighting / shadow overlay
       if (Math.abs(lightFactor) > 0.01) {
         ctx.save();
         ctx.beginPath();
@@ -248,62 +203,56 @@ export default function Dobra8WavingFlag() {
         ctx.closePath();
         
         if (lightFactor > 0) {
-          ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(0.25, lightFactor * 0.35)})`;
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(0.28, lightFactor * 0.35)})`;
         } else {
-          ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(0.45, -lightFactor * 0.5)})`;
+          ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(0.48, -lightFactor * 0.5)})`;
         }
         ctx.fill();
         ctx.restore();
       }
     };
 
-    // Animation Loop
-    let animId: number;
+    // Animation loop control via Intersection Observer (Pauses when offscreen)
+    let animId: number | null = null;
+    let isVisible = false;
     let startTime = performance.now();
 
     const render = (now: number) => {
-      const time = (now - startTime) * 0.001; // in seconds
+      if (!isVisible) return;
 
+      const time = (now - startTime) * 0.001;
       ctx.clearRect(0, 0, width, height);
 
-      // Smooth interpolation for pointer interaction strength
       const ptr = pointerRef.current;
       ptr.strength += (ptr.targetStrength - ptr.strength) * 0.08;
 
-      // 1. UPDATE GRID VERTICES
+      // 1. UPDATE GRID VERTICES (Rich organic wave math)
       for (let r = 0; r <= ROWS; r++) {
         for (let c = 0; c <= COLS; c++) {
           const pt = grid[r][c];
           const pin = pt.pin;
 
-          // Continuous Primary Sine Wave (wind motion)
-          const primaryWave = Math.sin(c * 0.22 - time * 3.8) * 16 * pin;
-          
-          // Secondary harmonic wave (vertical ripple & diagonal flutter)
-          const secondaryWave = Math.sin(c * 0.12 + r * 0.18 - time * 2.2) * 8 * pin;
-          
-          // Slight horizontal wave motion
-          const horizWave = Math.cos(c * 0.2 - time * 2.5) * 6 * pin;
+          const primaryWave = Math.sin(c * 0.22 - time * 3.6) * 20 * pin;
+          const secondaryWave = Math.sin(c * 0.14 + r * 0.18 - time * 2.5) * 10 * pin;
+          const tertiaryWave = Math.cos(r * 0.28 - time * 3.5) * 5 * pin;
+          const horizWave = Math.cos(c * 0.16 - time * 2.8) * 7 * pin;
 
           let interactOffset = 0;
-
-          // Localized interaction ripple from mouse / touch
           if (ptr.strength > 0.001) {
             const dx = pt.baseX - ptr.x;
             const dy = pt.baseY - ptr.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            const radius = 180; // interaction influence radius in px
+            const radius = 180;
 
             if (dist < radius) {
               const normDist = dist / radius;
-              // Impact ripple propagating outwards
               const ripple = Math.sin(normDist * Math.PI * 3.0 - time * 8) * (1 - normDist);
               interactOffset = ripple * 32 * pin * ptr.strength;
             }
           }
 
           pt.x = pt.baseX + horizWave;
-          pt.y = pt.baseY + primaryWave + secondaryWave + interactOffset;
+          pt.y = pt.baseY + primaryWave + secondaryWave + tertiaryWave + interactOffset;
         }
       }
 
@@ -315,13 +264,11 @@ export default function Dobra8WavingFlag() {
           const p11 = grid[r + 1][c + 1];
           const p01 = grid[r + 1][c];
 
-          // Calculate cell slope/gradient for cloth lighting calculation
           const dy = p10.y - p00.y;
           const dx = p10.x - p00.x;
           const slope = dx !== 0 ? dy / dx : 0;
-          const lightFactor = slope * 0.8; // positive = highlight, negative = shadow
+          const lightFactor = slope * 1.1;
 
-          // Triangle 1: (p00, p10, p01)
           drawTexturedTriangle(
             { x: p00.x, y: p00.y },
             { x: p10.x, y: p10.y },
@@ -332,7 +279,6 @@ export default function Dobra8WavingFlag() {
             lightFactor
           );
 
-          // Triangle 2: (p10, p11, p01)
           drawTexturedTriangle(
             { x: p10.x, y: p10.y },
             { x: p11.x, y: p11.y },
@@ -345,30 +291,65 @@ export default function Dobra8WavingFlag() {
         }
       }
 
-      // 3. DRAW FLAGPOLE (MASTRO) ON THE LEFT
-      const poleX = POLE_WIDTH + 4;
+      // 3. DRAW SUBTLE GREEN BORDER ALONG TOP AND BOTTOM EDGES OF FLAG
+      ctx.save();
+      ctx.strokeStyle = "rgba(65, 242, 10, 0.6)";
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = "rgba(65, 242, 10, 0.4)";
+      ctx.shadowBlur = 5;
+
+      // Top Edge
+      ctx.beginPath();
+      for (let c = 0; c <= COLS; c++) {
+        const pt = grid[0][c];
+        if (c === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      }
+      ctx.stroke();
+
+      // Bottom Edge
+      ctx.beginPath();
+      for (let c = 0; c <= COLS; c++) {
+        const pt = grid[ROWS][c];
+        if (c === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      // 4. DRAW SLEEK METALLIC FLAGPOLE ON LEFT
+      const poleX = POLE_WIDTH + 3;
       const poleTop = 15;
       const poleBottom = height - 15;
 
-      // Metallic flagpole gradient
       const poleGrad = ctx.createLinearGradient(poleX - POLE_WIDTH, 0, poleX, 0);
-      poleGrad.addColorStop(0, "#222222");
-      poleGrad.addColorStop(0.5, "#41F20A");
+      poleGrad.addColorStop(0, "#111111");
+      poleGrad.addColorStop(0.3, "#E5E5E5");
+      poleGrad.addColorStop(0.6, "#FFFFFF");
+      poleGrad.addColorStop(0.8, "#888888");
       poleGrad.addColorStop(1, "#111111");
 
       ctx.fillStyle = poleGrad;
       ctx.beginPath();
-      ctx.roundRect(poleX - POLE_WIDTH, poleTop, POLE_WIDTH, poleBottom - poleTop, 2);
+      if (typeof ctx.roundRect === "function") {
+        ctx.roundRect(poleX - POLE_WIDTH, poleTop, POLE_WIDTH, poleBottom - poleTop, 2);
+      } else {
+        ctx.rect(poleX - POLE_WIDTH, poleTop, POLE_WIDTH, poleBottom - poleTop);
+      }
       ctx.fill();
 
-      // Metallic top cap/sphere on flagpole
+      // Glowing Green LED Cap on top of pole
+      ctx.save();
       ctx.fillStyle = "#41F20A";
+      ctx.shadowColor = "#41F20A";
+      ctx.shadowBlur = 12;
       ctx.beginPath();
-      ctx.arc(poleX - POLE_WIDTH / 2, poleTop - 2, Math.max(3, POLE_WIDTH), 0, Math.PI * 2);
+      ctx.arc(poleX - POLE_WIDTH / 2, poleTop - 2, Math.max(3.5, POLE_WIDTH), 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
 
-      // Flag attachment rings on flagpole (top & bottom)
-      ctx.fillStyle = "#666666";
+      // Silver mounting rings
+      ctx.fillStyle = "#BBBBBB";
       const topRingY = grid[0][0].y;
       const bottomRingY = grid[ROWS][0].y;
 
@@ -380,15 +361,37 @@ export default function Dobra8WavingFlag() {
       animId = requestAnimationFrame(render);
     };
 
-    animId = requestAnimationFrame(render);
+    // IntersectionObserver to start/stop loop when visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible) {
+            if (!animId) {
+              animId = requestAnimationFrame(render);
+            }
+          } else {
+            if (animId) {
+              cancelAnimationFrame(animId);
+              animId = null;
+            }
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
 
     return () => {
-      cancelAnimationFrame(animId);
+      if (animId) cancelAnimationFrame(animId);
+      observer.disconnect();
       resizeObserver.disconnect();
     };
   }, []);
 
-  // Event handlers for mouse & touch interaction
   const handlePointerMove = (clientX: number, clientY: number) => {
     if (!canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
@@ -407,27 +410,38 @@ export default function Dobra8WavingFlag() {
   };
 
   return (
-    <section className="relative w-full bg-black py-20 px-4 border-t border-zinc-900/80 overflow-hidden" id="bandeira-interativa">
+    <section 
+      ref={sectionRef as any}
+      className="relative w-full bg-black py-16 sm:py-24 px-4 border-t border-zinc-900/80 overflow-hidden" 
+      id="bandeira-interativa"
+    >
       {/* Background ambient green glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[750px] h-[350px] bg-[#41F20A]/10 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="w-full max-w-full mx-auto space-y-10 relative z-10 px-2 sm:px-6">
+      <div className="w-full max-w-full mx-auto space-y-8 sm:space-y-10 relative z-10 px-2 sm:px-6">
         
-        {/* Section Header */}
+        {/* Section Header with Glowing Interactive Highlight Text */}
         <div className="text-center space-y-4 max-w-4xl mx-auto">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white font-heading">
-            O Movimento <span className="text-[#41F20A]">Não Para</span>
-          </h2>
+          <AnimatedText
+            as="h2"
+            text="O movimento não para"
+            highlights={["não para"]}
+            className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white font-heading"
+          />
           
-          <p className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto font-sans font-medium">
-            Não hasteamos bandeira por vaidade.<br className="hidden sm:block" /> Hasteamos para dizer que este <span className="text-[#41F20A] font-bold">terreno é nosso</span>.
-          </p>
+          <AnimatedText
+            as="p"
+            text="Não hasteamos bandeira por vaidade. Hasteamos para dizer que este terreno é nosso."
+            highlights={["terreno é nosso"]}
+            className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto font-sans font-medium"
+            initialDelayMs={150}
+          />
         </div>
 
-        {/* Waving Flag Canvas Stage (Full screen wide, no container box) */}
+        {/* Waving Flag Canvas Stage */}
         <div 
           ref={containerRef}
-          className="relative w-full max-w-7xl mx-auto flex justify-center items-center cursor-grab active:cursor-grabbing select-none my-4"
+          className="relative w-full max-w-7xl mx-auto flex justify-center items-center cursor-grab active:cursor-grabbing select-none my-2 sm:my-4"
           onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
           onMouseLeave={handlePointerLeave}
           onTouchStart={(e) => {

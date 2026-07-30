@@ -39,7 +39,6 @@ export function LiquidMetalButton({
   const calculatedWidth = useMemo(() => {
     if (customWidth) return customWidth;
     if (viewMode === "icon") return 48;
-    // Calculate based on label length to avoid truncation
     const estimated = label.length * 9.5 + 56;
     return Math.max(160, Math.min(480, Math.round(estimated)));
   }, [customWidth, viewMode, label]);
@@ -103,7 +102,6 @@ export function LiquidMetalButton({
             shaderMount.current = null;
           }
 
-          // Clear any existing canvas elements to prevent duplicate or stale canvas
           shaderRef.current.innerHTML = "";
 
           const mount = new ShaderMount(
@@ -118,7 +116,7 @@ export function LiquidMetalButton({
               u_contour: 0,
               u_angle: 45,
               u_scale: 6,
-              u_shape: 0, // 0 = full rectangle shader fill, clipped by container's border-radius: 100px
+              u_shape: 0,
               u_offsetX: 0.1,
               u_offsetY: -0.1,
             },
@@ -132,7 +130,6 @@ export function LiquidMetalButton({
       }
     };
 
-    // Timeout ensures DOM layout is updated before ShaderMount measures element width
     const timer = setTimeout(() => {
       loadShader();
     }, 30);
@@ -187,209 +184,146 @@ export function LiquidMetalButton({
   const Element = href ? "a" : "button";
 
   return (
-    <div className={`relative inline-block ${className}`}>
+    <div className={`relative inline-block select-none ${className}`}>
       <div
         style={{
-          perspective: "1000px",
-          perspectiveOrigin: "50% 50%",
+          position: "relative",
+          width: `${dimensions.width}px`,
+          height: `${dimensions.height}px`,
+          transition: "width 0.4s ease, height 0.4s ease",
         }}
       >
+        {/* Outer Liquid Metal Shader Canvas Background (Z-index 10) */}
         <div
           style={{
-            position: "relative",
+            position: "absolute",
+            top: 0,
+            left: 0,
             width: `${dimensions.width}px`,
             height: `${dimensions.height}px`,
-            transformStyle: "preserve-3d",
-            transition:
-              "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s ease, height 0.4s ease",
-            transform: "none",
+            zIndex: 10,
+            borderRadius: "100px",
+            boxShadow: isPressed
+              ? "0px 0px 0px 1px rgba(65, 242, 10, 0.5), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)"
+              : isHovered
+              ? "0px 0px 0px 1px rgba(65, 242, 10, 0.6), 0px 12px 20px 0px rgba(65, 242, 10, 0.25)"
+              : "0px 0px 0px 1px rgba(255, 255, 255, 0.15), 0px 9px 12px 0px rgba(0, 0, 0, 0.4)",
+            transition: "box-shadow 0.3s ease, transform 0.2s ease",
+            transform: isPressed ? "scale(0.97)" : "scale(1)",
           }}
         >
-          {/* Label / Icon Overlay */}
           <div
+            ref={shaderRef}
+            className="shader-container-exploded"
             style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: `${dimensions.width}px`,
-              height: `${dimensions.height}px`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              transformStyle: "preserve-3d",
-              transition:
-                "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s ease, height 0.4s ease, gap 0.4s ease",
-              transform: "translateZ(20px)",
-              zIndex: 30,
-              pointerEvents: "none",
+              borderRadius: "100px",
+              overflow: "hidden",
+              position: "relative",
+              width: `${dimensions.shaderWidth}px`,
+              maxWidth: `${dimensions.shaderWidth}px`,
+              height: `${dimensions.shaderHeight}px`,
             }}
-          >
-            {viewMode === "icon" && (
-              icon || <Sparkles size={18} className="text-[#41F20A] drop-shadow-[0_1px_4px_rgba(65,242,10,0.5)]" />
-            )}
-            {viewMode === "text" && (
-              <>
-                <span
-                  style={{
-                    fontSize: "12px",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: isHovered ? "#FFFFFF" : "#41F20A",
-                    fontWeight: 800,
-                    textShadow: "0px 1px 3px rgba(0, 0, 0, 0.8), 0px 0px 8px rgba(65, 242, 10, 0.3)",
-                    transition: "all 0.3s ease",
-                    transform: "scale(1)",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {label}
-                </span>
-                {icon}
-              </>
-            )}
-          </div>
+          />
+        </div>
 
-          {/* Inner dark capsule background */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: `${dimensions.width}px`,
-              height: `${dimensions.height}px`,
-              transformStyle: "preserve-3d",
-              transition:
-                "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s ease, height 0.4s ease",
-              transform: `translateZ(10px) ${
-                isPressed ? "translateY(1px) scale(0.98)" : "translateY(0) scale(1)"
-              }`,
-              zIndex: 20,
-            }}
-          >
-            <div
+        {/* Inner Dark Capsule Backing (Z-index 20) */}
+        <div
+          style={{
+            position: "absolute",
+            top: "2px",
+            left: "2px",
+            width: `${dimensions.innerWidth}px`,
+            height: `${dimensions.innerHeight}px`,
+            borderRadius: "100px",
+            background: isHovered
+              ? "linear-gradient(180deg, #182a12 0%, #060e03 100%)"
+              : "linear-gradient(180deg, #1a1a1a 0%, #050505 100%)",
+            border: "1px solid rgba(65, 242, 10, 0.35)",
+            boxShadow: isHovered ? "0 0 15px rgba(65, 242, 10, 0.3)" : "none",
+            zIndex: 20,
+            pointerEvents: "none",
+            transition: "background 0.3s ease, border-color 0.3s ease",
+          }}
+        />
+
+        {/* Interactive Button / Anchor with Label & Icon directly inside (Z-index 30) */}
+        <Element
+          ref={buttonRef as any}
+          href={href}
+          target={target}
+          rel={rel}
+          onClick={handleClick}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onMouseDown={() => setIsPressed(true)}
+          onMouseUp={() => setIsPressed(false)}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: `${dimensions.width}px`,
+            height: `${dimensions.height}px`,
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            outline: "none",
+            zIndex: 30,
+            overflow: "hidden",
+            borderRadius: "100px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            textDecoration: "none",
+            transform: isPressed ? "scale(0.97)" : "scale(1)",
+            transition: "transform 0.2s ease",
+          }}
+          aria-label={label}
+        >
+          {/* Label / Icon Content inside button */}
+          {viewMode === "icon" && (
+            icon || <Sparkles size={18} className="text-[#41F20A] drop-shadow-[0_1px_4px_rgba(65,242,10,0.6)]" />
+          )}
+          {viewMode === "text" && (
+            <>
+              <span
+                style={{
+                  fontSize: "12px",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: isHovered ? "#FFFFFF" : "#41F20A",
+                  fontWeight: 800,
+                  textShadow: "0px 2px 4px rgba(0, 0, 0, 0.95), 0px 0px 10px rgba(65, 242, 10, 0.4)",
+                  transition: "color 0.3s ease",
+                  whiteSpace: "nowrap",
+                  zIndex: 35,
+                }}
+              >
+                {label}
+              </span>
+              {icon}
+            </>
+          )}
+
+          {/* Ripple effect */}
+          {ripples.map((ripple) => (
+            <span
+              key={ripple.id}
               style={{
-                width: `${dimensions.innerWidth}px`,
-                height: `${dimensions.innerHeight}px`,
-                margin: "2px",
-                borderRadius: "100px",
-                background: isHovered
-                  ? "linear-gradient(180deg, #182810 0%, #050a02 100%)"
-                  : "linear-gradient(180deg, #181818 0%, #020202 100%)",
-                border: "1px solid rgba(65, 242, 10, 0.3)",
-                boxShadow: isPressed
-                  ? "inset 0px 2px 4px rgba(0, 0, 0, 0.6)"
-                  : isHovered
-                  ? "0 0 15px rgba(65, 242, 10, 0.25)"
-                  : "none",
-                transition:
-                  "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s ease, height 0.4s ease, box-shadow 0.2s ease",
+                position: "absolute",
+                left: `${ripple.x}px`,
+                top: `${ripple.y}px`,
+                width: "20px",
+                height: "20px",
+                borderRadius: "50%",
+                background:
+                  "radial-gradient(circle, rgba(65, 242, 10, 0.7) 0%, rgba(65, 242, 10, 0) 70%)",
+                pointerEvents: "none",
+                animation: "ripple-animation 0.6s ease-out",
               }}
             />
-          </div>
-
-          {/* Outer shader canvas container */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: `${dimensions.width}px`,
-              height: `${dimensions.height}px`,
-              transformStyle: "preserve-3d",
-              transition:
-                "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s ease, height 0.4s ease",
-              transform: `translateZ(0px) ${
-                isPressed ? "translateY(1px) scale(0.98)" : "translateY(0) scale(1)"
-              }`,
-              zIndex: 10,
-            }}
-          >
-            <div
-              style={{
-                height: `${dimensions.height}px`,
-                width: `${dimensions.width}px`,
-                borderRadius: "100px",
-                boxShadow: isPressed
-                  ? "0px 0px 0px 1px rgba(65, 242, 10, 0.5), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)"
-                  : isHovered
-                  ? "0px 0px 0px 1px rgba(65, 242, 10, 0.6), 0px 12px 16px 0px rgba(65, 242, 10, 0.15)"
-                  : "0px 0px 0px 1px rgba(255, 255, 255, 0.15), 0px 9px 9px 0px rgba(0, 0, 0, 0.3)",
-                transition:
-                  "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s ease, height 0.4s ease, box-shadow 0.2s ease",
-                background: "rgb(0 0 0 / 0)",
-              }}
-            >
-              <div
-                ref={shaderRef}
-                className="shader-container-exploded"
-                style={{
-                  borderRadius: "100px",
-                  overflow: "hidden",
-                  position: "relative",
-                  width: `${dimensions.shaderWidth}px`,
-                  maxWidth: `${dimensions.shaderWidth}px`,
-                  height: `${dimensions.shaderHeight}px`,
-                  transition: "width 0.4s ease, height 0.4s ease",
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Interactive button / anchor overlay */}
-          <Element
-            ref={buttonRef as any}
-            href={href}
-            target={target}
-            rel={rel}
-            onClick={handleClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onMouseDown={() => setIsPressed(true)}
-            onMouseUp={() => setIsPressed(false)}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: `${dimensions.width}px`,
-              height: `${dimensions.height}px`,
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              outline: "none",
-              zIndex: 40,
-              transformStyle: "preserve-3d",
-              transform: "translateZ(25px)",
-              transition:
-                "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s ease, height 0.4s ease",
-              overflow: "hidden",
-              borderRadius: "100px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textDecoration: "none",
-            }}
-            aria-label={label}
-          >
-            {ripples.map((ripple) => (
-              <span
-                key={ripple.id}
-                style={{
-                  position: "absolute",
-                  left: `${ripple.x}px`,
-                  top: `${ripple.y}px`,
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  background:
-                    "radial-gradient(circle, rgba(65, 242, 10, 0.6) 0%, rgba(65, 242, 10, 0) 70%)",
-                  pointerEvents: "none",
-                  animation: "ripple-animation 0.6s ease-out",
-                }}
-              />
-            ))}
-          </Element>
-        </div>
+          ))}
+        </Element>
       </div>
     </div>
   );

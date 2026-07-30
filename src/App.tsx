@@ -3,6 +3,7 @@ import { Mail } from "lucide-react";
 
 import Dobra1Hero from "./components/Dobra1Hero";
 import Dobra2VSL from "./components/Dobra2VSL";
+import DobraSobreNos from "./components/DobraSobreNos";
 import Dobra3SplitHover from "./components/Dobra3SplitHover";
 import Dobra8WavingFlag from "./components/Dobra8WavingFlag";
 
@@ -24,20 +25,20 @@ export default function App() {
 
   const navLinks = [
     { label: "Onde atuamos", href: "#onde-atuamos" },
-    { label: "Sobre nós", href: "#faturamento" },
     { label: "Trabalhe conosco", href: "#trabalhe-conosco" },
+    { label: "Sobre nós", href: "#sobre-nos" },
   ];
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-zinc-800 selection:text-white">
       
       {/* iOS Style Glass Floating Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4 pb-2 transition-all duration-300">
+      <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 pt-2 sm:pt-4 pb-2 transition-all duration-300">
         <header 
-          className={`max-w-6xl mx-auto rounded-2xl sm:rounded-full border transition-all duration-500 ${
+          className={`max-w-6xl mx-auto rounded-2xl sm:rounded-full transition-all duration-500 ${
             scrolled 
-              ? "bg-black/85 backdrop-blur-xl border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.9)] py-2 sm:py-2.5 px-4 sm:px-6" 
-              : "bg-black/40 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none border-white/5 sm:border-transparent py-2.5 sm:py-4 px-4 sm:px-8"
+              ? "bg-black/85 backdrop-blur-xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.9)] py-2 sm:py-2.5 px-4 sm:px-6" 
+              : "bg-transparent border border-transparent py-2 sm:py-4 px-4 sm:px-8"
           }`}
         >
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
@@ -96,15 +97,18 @@ export default function App() {
           <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-b from-transparent to-black pointer-events-none" />
         </section>
 
-        {/* 2nd dob - Onde Atuamos (Pure black background with generous spacing and gradient glow) */}
-        <section id="onde-atuamos" className="scroll-mt-28 py-8 md:py-16 bg-black relative">
+        {/* 2nd dob - Onde Atuamos */}
+        <section id="onde-atuamos" className="scroll-mt-20 py-2 sm:py-6 md:py-12 bg-black relative">
           <Dobra2VSL />
         </section>
 
-        {/* 3rd dob - Full-Width Hover Split Screen (Colaboradores vs Autoridades) */}
+        {/* 3rd dob - Full-Width Hover Split Screen (Trabalhe Conosco / Colaboradores vs Autoridades) */}
         <Dobra3SplitHover />
 
-        {/* 4th dob - Interactive Waving Flag */}
+        {/* 4th dob - Sobre Nós Section */}
+        <DobraSobreNos />
+
+        {/* 5th dob - Interactive Waving Flag */}
         <Dobra8WavingFlag />
 
       </main>

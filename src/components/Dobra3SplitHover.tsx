@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { AnimatedText } from "./ui/AnimatedText";
 import { LiquidMetalButton } from "./ui/liquid-metal-button";
 
@@ -56,9 +56,14 @@ export default function Dobra3SplitHover() {
             if (el) el.scrollIntoView({ behavior: "smooth" });
           }}
           className={`
-            relative w-full md:w-auto min-h-[50vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
+            relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
             transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
-            border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-12 md:py-0
+            border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:py-0
+            ${
+              activeMobilePanel === "left" 
+                ? "shadow-[inset_0_0_50px_rgba(65,242,10,0.25)] border-[#41F20A]/40 md:border-white/10" 
+                : "opacity-90"
+            }
             ${
               hoveredPanel === "left" 
                 ? "md:flex-[4]" 
@@ -72,7 +77,7 @@ export default function Dobra3SplitHover() {
           <div 
             className={`
               absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105
-              ${activeMobilePanel === "left" ? "scale-110 md:scale-100" : "scale-100"}
+              ${activeMobilePanel === "left" ? "scale-115 md:scale-100" : "scale-100"}
             `}
             style={{
               backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80')"
@@ -80,10 +85,12 @@ export default function Dobra3SplitHover() {
           />
           <div 
             className={`
-              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/60 group-hover:via-black/70 transition-colors duration-500
-              ${activeMobilePanel === "left" ? "via-black/65" : "via-black/80"}
+              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50 group-hover:via-black/70 transition-all duration-500
+              ${activeMobilePanel === "left" ? "via-black/55 bg-black/20" : "via-black/85 bg-black/50"}
             `} 
           />
+
+
 
           {/* Panel Content Wrapper */}
           <div className="relative z-10 max-w-xl mx-auto space-y-6 transition-all duration-500">
@@ -137,9 +144,14 @@ export default function Dobra3SplitHover() {
             if (el) el.scrollIntoView({ behavior: "smooth" });
           }}
           className={`
-            relative w-full md:w-auto min-h-[50vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
+            relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
             transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
-            group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-12 md:py-0
+            group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:py-0
+            ${
+              activeMobilePanel === "right" 
+                ? "shadow-[inset_0_0_50px_rgba(65,242,10,0.25)] border-[#41F20A]/40" 
+                : "opacity-90"
+            }
             ${
               hoveredPanel === "right" 
                 ? "md:flex-[4]" 
@@ -153,7 +165,7 @@ export default function Dobra3SplitHover() {
           <div 
             className={`
               absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105
-              ${activeMobilePanel === "right" ? "scale-110 md:scale-100" : "scale-100"}
+              ${activeMobilePanel === "right" ? "scale-115 md:scale-100" : "scale-100"}
             `}
             style={{
               backgroundImage: "url('https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80')"
@@ -161,10 +173,12 @@ export default function Dobra3SplitHover() {
           />
           <div 
             className={`
-              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/60 group-hover:via-black/70 transition-colors duration-500
-              ${activeMobilePanel === "right" ? "via-black/65" : "via-black/80"}
+              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50 group-hover:via-black/70 transition-all duration-500
+              ${activeMobilePanel === "right" ? "via-black/55 bg-black/20" : "via-black/85 bg-black/50"}
             `}
           />
+
+
 
           {/* Panel Content Wrapper */}
           <div className="relative z-10 max-w-xl mx-auto space-y-6 transition-all duration-500">
