@@ -32,33 +32,33 @@ export default function App() {
     <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-zinc-800 selection:text-white">
       
       {/* iOS Style Glass Floating Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-4 pt-4 pb-2 transition-all duration-300">
+      <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4 pb-2 transition-all duration-300">
         <header 
-          className={`max-w-6xl mx-auto rounded-full border transition-all duration-500 ${
+          className={`max-w-6xl mx-auto rounded-2xl sm:rounded-full border transition-all duration-500 ${
             scrolled 
-              ? "bg-black/80 backdrop-blur-xl border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.9)] py-2.5 px-6" 
-              : "bg-transparent border-transparent py-4 px-6 md:px-8"
+              ? "bg-black/85 backdrop-blur-xl border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.9)] py-2 sm:py-2.5 px-4 sm:px-6" 
+              : "bg-black/40 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none border-white/5 sm:border-transparent py-2.5 sm:py-4 px-4 sm:px-8"
           }`}
         >
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
             
-            {/* DOMINUS White Premium Logo */}
-            <a href="#faturamento" className="flex items-center transition">
+            {/* DOMINUS White Premium Logo - Centered on mobile */}
+            <a href="#faturamento" className="flex items-center justify-center transition">
               <img 
                 src="https://i.ibb.co/chkPHKnw/logo-extensa-branca.webp" 
                 alt="DOMINUS" 
                 referrerPolicy="no-referrer"
-                className="h-6 sm:h-7 w-auto object-contain brightness-105 active:scale-95 transition-transform"
+                className="h-5 sm:h-7 w-auto object-contain brightness-105 active:scale-95 transition-transform"
               />
             </a>
 
-            {/* Anchor links list - Fully Transparent */}
-            <nav className="flex items-center gap-6 sm:gap-8">
+            {/* Anchor links list - Underneath logo on mobile, right-aligned on desktop */}
+            <nav className="flex items-center justify-center gap-4 sm:gap-8 flex-wrap">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="text-xs sm:text-sm font-sans font-semibold text-[#F1F1F1]/80 hover:text-white uppercase tracking-wider transition-colors duration-200 cursor-pointer"
+                  className="text-[11px] sm:text-xs md:text-sm font-sans font-semibold text-[#F1F1F1]/80 hover:text-white uppercase tracking-wider transition-colors duration-200 cursor-pointer whitespace-nowrap"
                 >
                   {link.label}
                 </a>

@@ -115,7 +115,7 @@ export default function Dobra8WavingFlag() {
       texCtx.fillStyle = "rgba(255, 255, 255, 0.4)";
       texCtx.font = "600 16px monospace";
       texCtx.textAlign = "right";
-      texCtx.fillText("DIRECT RESPONSE • COPRODUÇÃO", TEX_WIDTH - 40, 45);
+      texCtx.fillText("VENDER, CRESCER E DOMINAR", TEX_WIDTH - 40, 45);
 
       setTextureLoaded(true);
     };
@@ -143,14 +143,16 @@ export default function Dobra8WavingFlag() {
     let height = 0;
     let grid: Vertex[][] = [];
 
-    // Pole dimensions
-    const POLE_WIDTH = 12;
+    // Pole dimensions (Minimalist thin pole)
+    let POLE_WIDTH = 5;
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       
       width = rect.width;
+      POLE_WIDTH = width < 640 ? 3 : 5;
+      
       // Full screen aspect scale for flag
       height = Math.min(rect.width * 0.55, 760);
       if (width < 640) {
@@ -344,41 +346,35 @@ export default function Dobra8WavingFlag() {
       }
 
       // 3. DRAW FLAGPOLE (MASTRO) ON THE LEFT
-      const poleX = POLE_WIDTH + 6;
+      const poleX = POLE_WIDTH + 4;
       const poleTop = 15;
       const poleBottom = height - 15;
 
       // Metallic flagpole gradient
       const poleGrad = ctx.createLinearGradient(poleX - POLE_WIDTH, 0, poleX, 0);
-      poleGrad.addColorStop(0, "#1a1a1a");
-      poleGrad.addColorStop(0.3, "#666666");
-      poleGrad.addColorStop(0.6, "#ffffff");
-      poleGrad.addColorStop(0.9, "#333333");
-      poleGrad.addColorStop(1, "#0d0d0d");
+      poleGrad.addColorStop(0, "#222222");
+      poleGrad.addColorStop(0.5, "#41F20A");
+      poleGrad.addColorStop(1, "#111111");
 
       ctx.fillStyle = poleGrad;
       ctx.beginPath();
-      ctx.roundRect(poleX - POLE_WIDTH, poleTop, POLE_WIDTH, poleBottom - poleTop, 4);
+      ctx.roundRect(poleX - POLE_WIDTH, poleTop, POLE_WIDTH, poleBottom - poleTop, 2);
       ctx.fill();
 
       // Metallic top cap/sphere on flagpole
-      const capGrad = ctx.createRadialGradient(poleX - 6, poleTop - 2, 2, poleX - 4, poleTop, 10);
-      capGrad.addColorStop(0, "#ffffff");
-      capGrad.addColorStop(0.4, "#41F20A");
-      capGrad.addColorStop(1, "#113300");
-      ctx.fillStyle = capGrad;
+      ctx.fillStyle = "#41F20A";
       ctx.beginPath();
-      ctx.arc(poleX - POLE_WIDTH / 2, poleTop - 2, 8, 0, Math.PI * 2);
+      ctx.arc(poleX - POLE_WIDTH / 2, poleTop - 2, Math.max(3, POLE_WIDTH), 0, Math.PI * 2);
       ctx.fill();
 
       // Flag attachment rings on flagpole (top & bottom)
-      ctx.fillStyle = "#888888";
+      ctx.fillStyle = "#666666";
       const topRingY = grid[0][0].y;
       const bottomRingY = grid[ROWS][0].y;
 
       ctx.beginPath();
-      ctx.arc(poleX - POLE_WIDTH / 2, topRingY, 4, 0, Math.PI * 2);
-      ctx.arc(poleX - POLE_WIDTH / 2, bottomRingY, 4, 0, Math.PI * 2);
+      ctx.arc(poleX - POLE_WIDTH / 2, topRingY, Math.max(2, POLE_WIDTH / 2), 0, Math.PI * 2);
+      ctx.arc(poleX - POLE_WIDTH / 2, bottomRingY, Math.max(2, POLE_WIDTH / 2), 0, Math.PI * 2);
       ctx.fill();
 
       animId = requestAnimationFrame(render);
@@ -420,11 +416,11 @@ export default function Dobra8WavingFlag() {
         {/* Section Header */}
         <div className="text-center space-y-4 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white font-heading">
-            O Movimento Não Para
+            O Movimento <span className="text-[#41F20A]">Não Para</span>
           </h2>
           
           <p className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto font-sans font-medium">
-            Não hasteamos bandeira por vaidade.<br className="hidden sm:block" /> Hasteamos para dizer que este terreno é nosso.
+            Não hasteamos bandeira por vaidade.<br className="hidden sm:block" /> Hasteamos para dizer que este <span className="text-[#41F20A] font-bold">terreno é nosso</span>.
           </p>
         </div>
 
