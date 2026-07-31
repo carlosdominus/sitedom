@@ -23,7 +23,34 @@ function ServiceCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobileActive, setIsMobileActive] = useState(false);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
+
+  // Mobile scroll trigger: illuminates card when centered in viewport on mobile (< 1024px)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth >= 1024) {
+        setIsMobileActive(false);
+        return;
+      }
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      const viewportCenter = window.innerHeight * 0.5;
+      const cardCenter = rect.top + rect.height / 2;
+      const distanceToCenter = Math.abs(cardCenter - viewportCenter);
+
+      // Activate highlight when the card is in the vertical center focal zone
+      if (distanceToCenter < window.innerHeight * 0.28) {
+        setIsMobileActive(true);
+      } else {
+        setIsMobileActive(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (prefersReducedMotion || window.innerWidth < 1024) return;
@@ -52,6 +79,7 @@ function ServiceCard({
   };
 
   const delay = 250 + index * 80;
+  const isCardHighlighted = isHovered || isMobileActive;
 
   return (
     <div
@@ -59,7 +87,11 @@ function ServiceCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative group bg-zinc-950/90 border border-zinc-800/90 hover:border-[#41F20A]/40 rounded-2xl p-6 sm:p-8 backdrop-blur-xl overflow-hidden shadow-2xl transition-all duration-300 flex flex-col justify-center ${colSpan} ${className}`}
+      className={`relative group bg-zinc-950/90 border rounded-2xl p-6 sm:p-8 backdrop-blur-xl overflow-hidden transition-all duration-300 flex flex-col justify-center ${colSpan} ${className} ${
+        isCardHighlighted
+          ? "border-[#41F20A]/60 shadow-[0_0_24px_rgba(65,242,10,0.15)]"
+          : "border-zinc-800/90 shadow-2xl"
+      }`}
       style={{
         transform:
           isVisible || prefersReducedMotion
@@ -69,12 +101,12 @@ function ServiceCard({
         filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
         transition: prefersReducedMotion
           ? "none"
-          : `opacity 0.6s ease-out ${delay}ms, transform 0.2s ease-out, border-color 0.3s ease, filter 0.6s ease-out ${delay}ms`,
+          : `opacity 0.6s ease-out ${delay}ms, transform 0.4s ease-out, border-color 0.3s ease, box-shadow 0.3s ease, filter 0.6s ease-out ${delay}ms`,
       }}
     >
-      {/* Radial Spotlight Effect following cursor */}
+      {/* Desktop Radial Spotlight Effect following cursor (Hidden on Mobile to preserve 100% text contrast) */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-300 z-0"
+        className="pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-300 z-0 hidden lg:block"
         style={{
           opacity: isHovered ? 1 : 0,
           background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(65, 242, 10, 0.12), transparent 70%)`,
@@ -84,12 +116,12 @@ function ServiceCard({
       {/* Subtle Top Accent Line */}
       <div
         className="pointer-events-none absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#41F20A] to-transparent transition-opacity duration-300 z-10"
-        style={{ opacity: isHovered ? 1 : 0.25 }}
+        style={{ opacity: isCardHighlighted ? 1 : 0.25 }}
       />
 
       {/* Card Content */}
       <div className="relative z-10 space-y-3 sm:space-y-4">
-        <h3 className="text-xl sm:text-2xl font-bold font-heading text-[#41F20A] tracking-tight drop-shadow-[0_0_12px_rgba(65,242,10,0.3)]">
+        <h3 className="text-xl sm:text-2xl font-bold font-heading text-[#41F20A] tracking-tight">
           {title}
         </h3>
 
