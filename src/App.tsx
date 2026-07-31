@@ -6,9 +6,29 @@ import Dobra2VSL from "./components/Dobra2VSL";
 import DobraSobreNos from "./components/DobraSobreNos";
 import Dobra3SplitHover from "./components/Dobra3SplitHover";
 import Dobra8WavingFlag from "./components/Dobra8WavingFlag";
+import Footer from "./components/Footer";
+import FormTimeModal from "./components/FormTimeModal";
+import FormParceiroModal from "./components/FormParceiroModal";
 
 export default function App() {
   const [scrolled, setScrolled] = useState<boolean>(false);
+  const [activeFormModal, setActiveFormModal] = useState<"time" | "parceiro" | null>(null);
+
+  // Sync hash routing for forms (#form-time and #form-parceiro)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === "#form-time") {
+        setActiveFormModal("time");
+      } else if (hash === "#form-parceiro") {
+        setActiveFormModal("parceiro");
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
 
   // Monitor scroll state for some header dynamic opacity adjustments
   useEffect(() => {
@@ -22,6 +42,23 @@ export default function App() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const openFormTime = () => {
+    setActiveFormModal("time");
+    window.history.pushState(null, "", "#form-time");
+  };
+
+  const openFormParceiro = () => {
+    setActiveFormModal("parceiro");
+    window.history.pushState(null, "", "#form-parceiro");
+  };
+
+  const closeModal = () => {
+    setActiveFormModal(null);
+    if (window.location.hash === "#form-time" || window.location.hash === "#form-parceiro") {
+      window.history.pushState(null, "", window.location.pathname);
+    }
+  };
 
   const navLinks = [
     { label: "Onde atuamos", href: "#onde-atuamos" },
@@ -103,7 +140,10 @@ export default function App() {
         </section>
 
         {/* 3rd dob - Full-Width Hover Split Screen (Trabalhe Conosco / Colaboradores vs Autoridades) */}
-        <Dobra3SplitHover />
+        <Dobra3SplitHover 
+          onOpenFormTime={openFormTime}
+          onOpenFormParceiro={openFormParceiro}
+        />
 
         {/* 4th dob - Sobre Nós Section */}
         <DobraSobreNos />
@@ -113,63 +153,22 @@ export default function App() {
 
       </main>
 
-      {/* Elegant CTA Footer bar */}
-      <footer className="bg-black border-t border-zinc-900/80 py-12 px-4">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          <div className="space-y-3">
-            <img 
-              src="https://i.ibb.co/chkPHKnw/logo-extensa-branca.webp" 
-              alt="DOMINUS" 
-              referrerPolicy="no-referrer"
-              className="h-5 w-auto object-contain brightness-95"
-            />
-            <p className="text-xs text-zinc-400 leading-relaxed max-w-sm mt-3 font-sans">
-              Engenharia estratégica de funis de Direct Response e coprodução premium para grandes autoridades digitais.
-            </p>
-          </div>
+      {/* Modern Dark Mode Footer */}
+      <Footer 
+        onOpenFormTime={openFormTime}
+        onOpenFormParceiro={openFormParceiro}
+      />
 
-          <div className="space-y-3">
-            <h4 className="text-[10px] font-mono text-zinc-500 uppercase tracking-wildest">Metas da Parceria</h4>
-            <ul className="text-xs text-zinc-400 space-y-1.5 font-medium font-sans">
-              <li className="flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-[#41F20A] rounded-full" />
-                Dobra dos ganhos mensais de forma imediata via Upsell
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-[#41F20A] rounded-full" />
-                Escala de 10x na entrega orgânica através de ganchos de 3s
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-[#41F20A] rounded-full" />
-                Estruturação do roteiro VSL de alta conversão
-              </li>
-            </ul>
-          </div>
+      {/* Modals para os Formulários */}
+      <FormTimeModal 
+        isOpen={activeFormModal === "time"} 
+        onClose={closeModal} 
+      />
 
-          <div className="space-y-4">
-            <h4 className="text-[10px] font-mono text-zinc-500 uppercase tracking-wildest">Contato Direto</h4>
-            <div className="space-y-2">
-              <a 
-                href="mailto:contacto@dominus.site" 
-                className="flex items-center gap-2 text-xs text-zinc-300 hover:text-white transition font-sans"
-              >
-                <Mail size={13} className="text-[#41F20A]" />
-                <span>contacto@dominus.site</span>
-              </a>
-              <div className="text-[10px] text-zinc-500 font-mono">
-                Planejado e executado por Gilberto & Felipe
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div className="max-w-6xl mx-auto mt-12 pt-6 border-t border-zinc-900/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[9px] text-zinc-500 font-mono uppercase tracking-widest">
-          <span>© 1026 COPRODUÇÃO DOMINUS • TODOS OS DIREITOS RESERVADOS</span>
-          <span>ESTATÍSTICAS VALIDADAS EM MARKETPLACE DR</span>
-        </div>
-      </footer>
+      <FormParceiroModal 
+        isOpen={activeFormModal === "parceiro"} 
+        onClose={closeModal} 
+      />
 
     </div>
   );

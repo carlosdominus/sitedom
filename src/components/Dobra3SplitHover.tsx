@@ -3,7 +3,12 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { AnimatedText } from "./ui/AnimatedText";
 import { LiquidMetalButton } from "./ui/liquid-metal-button";
 
-export default function Dobra3SplitHover() {
+interface Dobra3SplitHoverProps {
+  onOpenFormTime?: () => void;
+  onOpenFormParceiro?: () => void;
+}
+
+export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }: Dobra3SplitHoverProps) {
   const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(null);
   const [activeMobilePanel, setActiveMobilePanel] = useState<"left" | "right">("left");
 
@@ -119,13 +124,12 @@ export default function Dobra3SplitHover() {
             {/* CTA Button */}
             <div className="pt-2 flex justify-center">
               <LiquidMetalButton
-                href="#trabalhe-conosco"
+                href="#form-time"
                 onClick={(e) => {
                   e?.stopPropagation();
-                  const el = document.getElementById("trabalhe-conosco");
-                  if (el) {
-                    e?.preventDefault();
-                    el.scrollIntoView({ behavior: "smooth" });
+                  e?.preventDefault();
+                  if (onOpenFormTime) {
+                    onOpenFormTime();
                   }
                 }}
                 label="Quero fazer parte do time"
@@ -140,8 +144,9 @@ export default function Dobra3SplitHover() {
           ref={rightPanelRef}
           onMouseEnter={() => setHoveredPanel("right")}
           onClick={() => {
-            const el = document.getElementById("sobre-nos");
-            if (el) el.scrollIntoView({ behavior: "smooth" });
+            if (onOpenFormParceiro) {
+              onOpenFormParceiro();
+            }
           }}
           className={`
             relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
@@ -207,13 +212,12 @@ export default function Dobra3SplitHover() {
             {/* CTA Button */}
             <div className="pt-2 flex justify-center">
               <LiquidMetalButton
-                href="#sobre-nos"
+                href="#form-parceiro"
                 onClick={(e) => {
                   e?.stopPropagation();
-                  const el = document.getElementById("sobre-nos");
-                  if (el) {
-                    e?.preventDefault();
-                    el.scrollIntoView({ behavior: "smooth" });
+                  e?.preventDefault();
+                  if (onOpenFormParceiro) {
+                    onOpenFormParceiro();
                   }
                 }}
                 label="Quero ser parceiro"

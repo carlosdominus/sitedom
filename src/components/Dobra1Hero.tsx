@@ -1,7 +1,7 @@
 import { ArrowDown } from "lucide-react";
-import { IMAGES } from "../data";
 import { AnimatedText } from "./ui/AnimatedText";
 import { LiquidMetalButton } from "./ui/liquid-metal-button";
+import RevenueComparisonCards from "./RevenueComparisonCards";
 
 interface Props {
   onNext: () => void;
@@ -28,14 +28,9 @@ export default function Dobra1Hero({ onNext }: Props) {
         />
       </div>
 
-      {/* Large Loose-standing Placas Image (No wrappers, no containers, completely loose and raw) */}
-      <div className="pt-4 max-w-3xl mx-auto">
-        <img
-          src={IMAGES.placas}
-          alt="Resultados de Faturamento"
-          referrerPolicy="no-referrer"
-          className="w-full h-auto object-contain block mx-auto transition-transform duration-500 hover:scale-[1.01]"
-        />
+      {/* Seção de Comparação de Faturamento: Sozinho vs. Com a Dominus */}
+      <div className="pt-2">
+        <RevenueComparisonCards />
       </div>
 
       {/* Flow indicator */}
