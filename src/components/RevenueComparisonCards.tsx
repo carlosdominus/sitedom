@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function RevenueComparisonCards() {
   const [hoveredCard, setHoveredCard] = useState<1 | 2 | null>(null);
+
+  const card1Ref = useRef<HTMLDivElement>(null);
+  const card2Ref = useRef<HTMLDivElement>(null);
 
   // Card 1 Data (Sozinho: Stagnant, low ceiling)
   const card1Bars = [
@@ -27,14 +30,46 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
+  // Mobile scroll trigger: activates hover state automatically as user scrolls down on mobile
+  useEffect(() => {
+    const handleScroll = () => {
+      // Only run scroll-activation on mobile screens (< 768px)
+      if (window.innerWidth >= 768) return;
+      if (!card1Ref.current || !card2Ref.current) return;
+
+      const rect1 = card1Ref.current.getBoundingClientRect();
+      const rect2 = card2Ref.current.getBoundingClientRect();
+      const viewportCenter = window.innerHeight * 0.45;
+
+      const dist1 = Math.abs(rect1.top + rect1.height / 2 - viewportCenter);
+      const dist2 = Math.abs(rect2.top + rect2.height / 2 - viewportCenter);
+
+      const inView1 = rect1.top < window.innerHeight && rect1.bottom > 0;
+      const inView2 = rect2.top < window.innerHeight && rect2.bottom > 0;
+
+      if (inView2 && dist2 < dist1) {
+        setHoveredCard(2);
+      } else if (inView1) {
+        setHoveredCard(1);
+      } else {
+        setHoveredCard(null);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Trigger initial check
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-4 space-y-4">
+    <div className="w-full max-w-5xl mx-auto px-4 py-4 space-y-4">
       {/* Comparison Cards Grid */}
       <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 sm:gap-8">
         
         {/* ==================== CARD 1: SOZINHO ==================== */}
         <div
-          className="group relative w-full md:w-[360px] bg-[#0c0d12] border border-zinc-800/90 hover:border-zinc-700/80 rounded-[2rem] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-between cursor-pointer"
+          ref={card1Ref}
+          className="group relative w-full md:w-[410px] lg:w-[420px] bg-[#0c0d12] border border-zinc-800/90 hover:border-zinc-700/80 rounded-[2rem] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-between cursor-pointer"
           onMouseEnter={() => setHoveredCard(1)}
           onMouseLeave={() => setHoveredCard(null)}
           onClick={() => setHoveredCard(hoveredCard === 1 ? null : 1)}
@@ -73,7 +108,7 @@ export default function RevenueComparisonCards() {
             </div>
 
             {/* 4. Barras do Gráfico (Sozinho) */}
-            <div className="relative z-10 h-32 w-full flex items-end justify-between gap-2 pt-4 px-2">
+            <div className="relative z-10 h-32 w-full flex items-end justify-between gap-2.5 pt-4 px-2">
               {card1Bars.map((bar, idx) => {
                 const heightPercent = hoveredCard === 1 ? bar.hoverHeight : bar.defaultHeight;
                 return (
@@ -117,8 +152,8 @@ export default function RevenueComparisonCards() {
           </div>
 
           {/* Corpo do Card */}
-          <div className="p-6 space-y-2 border-t border-zinc-800/80 bg-[#0c0d12]">
-            <h3 className="text-lg font-bold font-heading text-white tracking-tight">
+          <div className="p-6 sm:p-7 space-y-2.5 border-t border-zinc-800/80 bg-[#0c0d12] flex-1 flex flex-col justify-start">
+            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug min-h-[52px] flex items-center">
               Sozinho, o teto chega rápido
             </h3>
             <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
@@ -129,7 +164,8 @@ export default function RevenueComparisonCards() {
 
         {/* ==================== CARD 2: COM A DOMINUS ==================== */}
         <div
-          className="group relative w-full md:w-[360px] bg-[#0c0d12] border border-[#41F20A]/30 hover:border-[#41F20A]/70 rounded-[2rem] overflow-hidden shadow-[0_10px_40px_rgba(65,242,10,0.12)] transition-all duration-300 flex flex-col justify-between cursor-pointer"
+          ref={card2Ref}
+          className="group relative w-full md:w-[410px] lg:w-[420px] bg-[#0c0d12] border border-[#41F20A]/30 hover:border-[#41F20A]/70 rounded-[2rem] overflow-hidden shadow-[0_10px_40px_rgba(65,242,10,0.12)] transition-all duration-300 flex flex-col justify-between cursor-pointer"
           onMouseEnter={() => setHoveredCard(2)}
           onMouseLeave={() => setHoveredCard(null)}
           onClick={() => setHoveredCard(hoveredCard === 2 ? null : 2)}
@@ -168,7 +204,7 @@ export default function RevenueComparisonCards() {
             </div>
 
             {/* 4. Barras do Gráfico (Com a Dominus) */}
-            <div className="relative z-10 h-32 w-full flex items-end justify-between gap-2 pt-4 px-2">
+            <div className="relative z-10 h-32 w-full flex items-end justify-between gap-2.5 pt-4 px-2">
               {card2Bars.map((bar, idx) => {
                 const heightPercent = hoveredCard === 2 ? bar.hoverHeight : bar.defaultHeight;
                 const isClimaxBar = idx >= card2Bars.length - 2;
@@ -220,9 +256,9 @@ export default function RevenueComparisonCards() {
           </div>
 
           {/* Corpo do Card */}
-          <div className="p-6 space-y-2 border-t border-[#41F20A]/20 bg-[#0c0d12]">
-            <h3 className="text-lg font-bold font-heading text-white tracking-tight flex items-center gap-2">
-              <span>Com estrutura, o crescimento não para</span>
+          <div className="p-6 sm:p-7 space-y-2.5 border-t border-[#41F20A]/20 bg-[#0c0d12] flex-1 flex flex-col justify-start">
+            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug min-h-[52px] flex items-center">
+              Com estrutura, o crescimento não para
             </h3>
             <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
               Tráfego, oferta, copy e conversão trabalhando juntos rumo à meta de R$ 1 milhão por mês.

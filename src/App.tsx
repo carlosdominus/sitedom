@@ -74,7 +74,7 @@ export default function App() {
         <header 
           className={`max-w-6xl mx-auto rounded-2xl sm:rounded-full transition-all duration-500 ${
             scrolled 
-              ? "bg-black/85 backdrop-blur-xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.9)] py-2 sm:py-2.5 px-4 sm:px-6" 
+              ? "bg-black/40 backdrop-blur-md border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.5)] py-2 sm:py-2.5 px-4 sm:px-6" 
               : "bg-transparent border border-transparent py-2 sm:py-4 px-4 sm:px-8"
           }`}
         >
