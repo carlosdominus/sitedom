@@ -37,19 +37,23 @@ export default function RevenueComparisonCards() {
       if (window.innerWidth >= 768) return;
       if (!card1Ref.current || !card2Ref.current) return;
 
+      const viewportCenter = window.innerHeight * 0.5;
+
       const rect1 = card1Ref.current.getBoundingClientRect();
       const rect2 = card2Ref.current.getBoundingClientRect();
-      const viewportCenter = window.innerHeight * 0.45;
 
-      const dist1 = Math.abs(rect1.top + rect1.height / 2 - viewportCenter);
-      const dist2 = Math.abs(rect2.top + rect2.height / 2 - viewportCenter);
+      const center1 = rect1.top + rect1.height / 2;
+      const center2 = rect2.top + rect2.height / 2;
 
-      const inView1 = rect1.top < window.innerHeight && rect1.bottom > 0;
-      const inView2 = rect2.top < window.innerHeight && rect2.bottom > 0;
+      const dist1 = Math.abs(center1 - viewportCenter);
+      const dist2 = Math.abs(center2 - viewportCenter);
 
-      if (inView2 && dist2 < dist1) {
+      // Only trigger hover panel when the card is within the center focus zone of the screen
+      const maxTriggerDistance = window.innerHeight * 0.3;
+
+      if (dist2 < maxTriggerDistance && dist2 <= dist1) {
         setHoveredCard(2);
-      } else if (inView1) {
+      } else if (dist1 < maxTriggerDistance) {
         setHoveredCard(1);
       } else {
         setHoveredCard(null);
@@ -75,7 +79,7 @@ export default function RevenueComparisonCards() {
           onClick={() => setHoveredCard(hoveredCard === 1 ? null : 1)}
         >
           {/* Top Visual Chart Area */}
-          <div className="relative h-56 sm:h-60 bg-[#07080b] p-5 flex flex-col justify-between overflow-hidden">
+          <div className="relative h-44 sm:h-48 bg-[#07080b] p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
             
             {/* 1. Grid de fundo sutil com máscara radial */}
             <div
@@ -91,9 +95,9 @@ export default function RevenueComparisonCards() {
             {/* 2. Gradiente radial de cor (glow neutro) */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(113,113,122,0.12),transparent_70%)] pointer-events-none" />
 
-            {/* 3. Badges de percentual / metrica (canto superior esquerdo) */}
+            {/* 3. Badges de percentual / metrica (centralizado no mobile, esquerda no desktop) */}
             <div
-              className={`relative z-10 flex items-center gap-2 flex-wrap transition-all duration-300 ${
+              className={`relative z-10 flex items-center justify-center md:justify-start gap-2 flex-wrap transition-all duration-300 ${
                 hoveredCard === 1 ? "opacity-0 -translate-y-2 pointer-events-none" : "opacity-100 translate-y-0"
               }`}
             >
@@ -108,7 +112,7 @@ export default function RevenueComparisonCards() {
             </div>
 
             {/* 4. Barras do Gráfico (Sozinho) */}
-            <div className="relative z-10 h-32 w-full flex items-end justify-between gap-2.5 pt-4 px-2">
+            <div className="relative z-10 h-28 sm:h-30 w-full flex items-end justify-between gap-2.5 pt-2 px-2">
               {card1Bars.map((bar, idx) => {
                 const heightPercent = hoveredCard === 1 ? bar.hoverHeight : bar.defaultHeight;
                 return (
@@ -153,7 +157,7 @@ export default function RevenueComparisonCards() {
 
           {/* Corpo do Card */}
           <div className="p-6 sm:p-7 space-y-2.5 border-t border-zinc-800/80 bg-[#0c0d12] flex-1 flex flex-col justify-start">
-            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug min-h-[52px] flex items-center">
+            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug min-h-[52px] flex items-start">
               Sozinho, o teto chega rápido
             </h3>
             <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
@@ -171,7 +175,7 @@ export default function RevenueComparisonCards() {
           onClick={() => setHoveredCard(hoveredCard === 2 ? null : 2)}
         >
           {/* Top Visual Chart Area */}
-          <div className="relative h-56 sm:h-60 bg-[#07080b] p-5 flex flex-col justify-between overflow-hidden">
+          <div className="relative h-44 sm:h-48 bg-[#07080b] p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
             
             {/* 1. Grid de fundo sutil com máscara radial */}
             <div
@@ -187,9 +191,9 @@ export default function RevenueComparisonCards() {
             {/* 2. Gradiente radial de cor (Glow vibrante da marca #41F20A) */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_60%,rgba(65,242,10,0.18),transparent_70%)] pointer-events-none" />
 
-            {/* 3. Badges de percentual / metrica (canto superior esquerdo) */}
+            {/* 3. Badges de percentual / metrica (centralizado no mobile, esquerda no desktop) */}
             <div
-              className={`relative z-10 flex items-center gap-2 flex-wrap transition-all duration-300 ${
+              className={`relative z-10 flex items-center justify-center md:justify-start gap-2 flex-wrap transition-all duration-300 ${
                 hoveredCard === 2 ? "opacity-0 -translate-y-2 pointer-events-none" : "opacity-100 translate-y-0"
               }`}
             >
@@ -204,7 +208,7 @@ export default function RevenueComparisonCards() {
             </div>
 
             {/* 4. Barras do Gráfico (Com a Dominus) */}
-            <div className="relative z-10 h-32 w-full flex items-end justify-between gap-2.5 pt-4 px-2">
+            <div className="relative z-10 h-28 sm:h-30 w-full flex items-end justify-between gap-2.5 pt-2 px-2">
               {card2Bars.map((bar, idx) => {
                 const heightPercent = hoveredCard === 2 ? bar.hoverHeight : bar.defaultHeight;
                 const isClimaxBar = idx >= card2Bars.length - 2;
@@ -257,7 +261,7 @@ export default function RevenueComparisonCards() {
 
           {/* Corpo do Card */}
           <div className="p-6 sm:p-7 space-y-2.5 border-t border-[#41F20A]/20 bg-[#0c0d12] flex-1 flex flex-col justify-start">
-            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug min-h-[52px] flex items-center">
+            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug min-h-[52px] flex items-start">
               Com estrutura, o crescimento não para
             </h3>
             <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
