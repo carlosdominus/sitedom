@@ -156,11 +156,11 @@ export default function RevenueComparisonCards() {
           </div>
 
           {/* Corpo do Card */}
-          <div className="p-6 sm:p-7 space-y-2.5 border-t border-zinc-800/80 bg-[#0c0d12] flex-1 flex flex-col justify-start">
-            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug min-h-[52px] flex items-start">
+          <div className="p-5 sm:p-6 text-center space-y-1.5 border-t border-zinc-800/80 bg-[#0c0d12] flex-1 flex flex-col items-center justify-start">
+            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug text-center w-full">
               Sozinho, o teto chega rápido
             </h3>
-            <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
+            <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed text-center">
               Sem estrutura de tráfego, oferta e conversão, o faturamento oscila mas não escala.
             </p>
           </div>
@@ -260,11 +260,11 @@ export default function RevenueComparisonCards() {
           </div>
 
           {/* Corpo do Card */}
-          <div className="p-6 sm:p-7 space-y-2.5 border-t border-[#41F20A]/20 bg-[#0c0d12] flex-1 flex flex-col justify-start">
-            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug min-h-[52px] flex items-start">
+          <div className="p-5 sm:p-6 text-center space-y-1.5 border-t border-[#41F20A]/20 bg-[#0c0d12] flex-1 flex flex-col items-center justify-start">
+            <h3 className="text-lg sm:text-[19px] font-bold font-sans text-white tracking-normal leading-snug text-center w-full">
               Com estrutura, o crescimento não para
             </h3>
-            <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
+            <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed text-center">
               Tráfego, oferta, copy e conversão trabalhando juntos rumo à meta de R$ 1 milhão por mês.
             </p>
           </div>
