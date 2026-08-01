@@ -8,28 +8,9 @@ const Dobra3SplitHover = lazy(() => import("./components/Dobra3SplitHover"));
 const DobraSobreNos = lazy(() => import("./components/DobraSobreNos"));
 const Dobra8WavingFlag = lazy(() => import("./components/Dobra8WavingFlag"));
 const Footer = lazy(() => import("./components/Footer"));
-const FormTimeModal = lazy(() => import("./components/FormTimeModal"));
-const FormParceiroModal = lazy(() => import("./components/FormParceiroModal"));
 
 export default function App() {
   const [scrolled, setScrolled] = useState<boolean>(false);
-  const [activeFormModal, setActiveFormModal] = useState<"time" | "parceiro" | null>(null);
-
-  // Sync hash routing for forms (#form-time and #form-parceiro)
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash === "#form-time") {
-        setActiveFormModal("time");
-      } else if (hash === "#form-parceiro") {
-        setActiveFormModal("parceiro");
-      }
-    };
-
-    handleHashChange();
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
 
   // Monitor scroll state for header dynamic styling with rAF throttling
   useEffect(() => {
@@ -52,20 +33,11 @@ export default function App() {
   }, []);
 
   const openFormTime = () => {
-    setActiveFormModal("time");
-    window.history.pushState(null, "", "#form-time");
+    window.location.href = "https://dominus.site/forms/colaborador";
   };
 
   const openFormParceiro = () => {
-    setActiveFormModal("parceiro");
-    window.history.pushState(null, "", "#form-parceiro");
-  };
-
-  const closeModal = () => {
-    setActiveFormModal(null);
-    if (window.location.hash === "#form-time" || window.location.hash === "#form-parceiro") {
-      window.history.pushState(null, "", window.location.pathname);
-    }
+    window.location.href = "https://dominus.site/forms/expert";
   };
 
   const handleNavClick = (e?: React.MouseEvent<HTMLAnchorElement>, href?: string) => {
@@ -225,18 +197,6 @@ export default function App() {
           onOpenFormTime={openFormTime}
           onOpenFormParceiro={openFormParceiro}
           onNavClick={(e, href) => handleNavClick(e, href)}
-        />
-      </Suspense>
-
-      {/* Modals para os Formulários */}
-      <Suspense fallback={null}>
-        <FormTimeModal 
-          isOpen={activeFormModal === "time"} 
-          onClose={closeModal} 
-        />
-        <FormParceiroModal 
-          isOpen={activeFormModal === "parceiro"} 
-          onClose={closeModal} 
         />
       </Suspense>
 

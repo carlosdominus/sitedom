@@ -85,25 +85,13 @@ export default function Footer({ onOpenFormTime, onOpenFormParceiro, onNavClick 
 
               <nav className="flex flex-col space-y-2.5">
                 <a
-                  href="#form-time"
-                  onClick={(e) => {
-                    if (onOpenFormTime) {
-                      e.preventDefault();
-                      onOpenFormTime();
-                    }
-                  }}
+                  href="https://dominus.site/forms/colaborador"
                   className="text-sm font-sans font-medium text-zinc-300 hover:text-[#41F20A] transition-colors duration-200 cursor-pointer w-fit"
                 >
                   Quero fazer parte do time
                 </a>
                 <a
-                  href="#form-parceiro"
-                  onClick={(e) => {
-                    if (onOpenFormParceiro) {
-                      e.preventDefault();
-                      onOpenFormParceiro();
-                    }
-                  }}
+                  href="https://dominus.site/forms/expert"
                   className="text-sm font-sans font-medium text-zinc-300 hover:text-[#41F20A] transition-colors duration-200 cursor-pointer w-fit"
                 >
                   Quero ser parceiro

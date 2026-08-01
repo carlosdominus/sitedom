@@ -170,13 +170,9 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
             {/* CTA Button */}
             <div className="pt-2 flex justify-center">
               <LiquidMetalButton
-                href="#form-time"
+                href="https://dominus.site/forms/colaborador"
                 onClick={(e) => {
                   e?.stopPropagation();
-                  e?.preventDefault();
-                  if (onOpenFormTime) {
-                    onOpenFormTime();
-                  }
                 }}
                 label="Quero fazer parte do time"
                 icon={<ArrowRight size={14} className="text-[#41F20A]" />}
@@ -190,9 +186,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           ref={rightPanelRef}
           onMouseEnter={() => setHoveredPanel("right")}
           onClick={() => {
-            if (onOpenFormParceiro) {
-              onOpenFormParceiro();
-            }
+            window.location.href = "https://dominus.site/forms/expert";
           }}
           style={{
             flex: isMobile ? undefined : (hoveredPanel === "right" ? "85 85 0%" : hoveredPanel === "left" ? "15 15 0%" : "50 50 0%")
@@ -255,13 +249,9 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
             {/* CTA Button */}
             <div className="pt-2 flex justify-center">
               <LiquidMetalButton
-                href="#form-parceiro"
+                href="https://dominus.site/forms/expert"
                 onClick={(e) => {
                   e?.stopPropagation();
-                  e?.preventDefault();
-                  if (onOpenFormParceiro) {
-                    onOpenFormParceiro();
-                  }
                 }}
                 label="Quero ser parceiro"
                 icon={<ArrowRight size={14} className="text-[#41F20A]" />}
