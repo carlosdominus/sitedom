@@ -38,27 +38,9 @@ export default function Footer({ onOpenFormTime, onOpenFormParceiro }: FooterPro
         {/* BLOCO SUPERIOR (Linha única no desktop, empilha em coluna no mobile) */}
         <div className="flex flex-col md:flex-row items-start justify-between gap-10 md:gap-16">
           
-          {/* LADO ESQUERDO: Logo + Navegação + Formulários ao lado */}
-          <div className="flex flex-col sm:flex-row items-start gap-8 sm:gap-12 lg:gap-16">
+          {/* LADO ESQUERDO: Navegação + Formulários ao lado */}
+          <div className="order-1 md:order-2 flex flex-col sm:flex-row items-start gap-8 sm:gap-12 lg:gap-16">
             
-            {/* Logo da Marca (Altura ~90-100px) */}
-            <a 
-              href="#faturamento" 
-              className="group flex items-center focus:outline-none focus:ring-2 focus:ring-[#41F20A] rounded-lg p-1 transition"
-              aria-label="Ir para o topo - Dominus"
-            >
-              <img
-                src="https://dominus.site/image/logo-extensa-branca.webp"
-                alt="Dominus Logo"
-                width={540}
-                height={96}
-                loading="lazy"
-                decoding="async"
-                referrerPolicy="no-referrer"
-                className="h-16 sm:h-20 md:h-[96px] w-auto object-contain brightness-100 group-hover:brightness-110 transition duration-300"
-              />
-            </a>
-
             {/* Bloco de Navegação (Links em coluna) */}
             <div className="flex flex-col space-y-3">
               <div>
@@ -121,7 +103,7 @@ export default function Footer({ onOpenFormTime, onOpenFormParceiro }: FooterPro
           </div>
 
           {/* LADO DIREITO: Redes Sociais */}
-          <div className="flex flex-col space-y-3">
+          <div className="order-2 md:order-3 flex flex-col space-y-3">
             <div>
               <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-[0.2em] font-semibold">
                 SIGA-NOS
@@ -147,6 +129,24 @@ export default function Footer({ onOpenFormTime, onOpenFormParceiro }: FooterPro
               })}
             </div>
           </div>
+
+          {/* LOGO DA MARCA (No mobile fica após as redes sociais: order-3) */}
+          <a 
+            href="#faturamento" 
+            className="order-3 md:order-1 group flex items-center focus:outline-none focus:ring-2 focus:ring-[#41F20A] rounded-lg p-1 transition pt-2 md:pt-0"
+            aria-label="Ir para o topo - Dominus"
+          >
+            <img
+              src="https://dominus.site/image/logo-extensa-branca.webp"
+              alt="Dominus Logo"
+              width={540}
+              height={96}
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
+              className="h-14 sm:h-18 md:h-[96px] w-auto object-contain brightness-100 group-hover:brightness-110 transition duration-300"
+            />
+          </a>
 
         </div>
 

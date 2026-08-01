@@ -42,41 +42,49 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
     return () => observer.disconnect();
   }, []);
 
-  // Scroll observer on mobile using IntersectionObserver to avoid forced reflows
+  // Mobile scroll trigger: activates image zoom and border glow when card center enters middle focal zone of viewport
   useEffect(() => {
     if (window.innerWidth >= 768) return;
 
-    let leftRatio = 0;
-    let rightRatio = 0;
+    let ticking = false;
 
-    const updateActiveMobile = () => {
-      if (leftRatio > 0.25 && leftRatio >= rightRatio) {
-        setActiveMobilePanel("left");
-      } else if (rightRatio > 0.25 && rightRatio > leftRatio) {
-        setActiveMobilePanel("right");
-      } else if (leftRatio <= 0.1 && rightRatio <= 0.1) {
-        setActiveMobilePanel(null);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (leftPanelRef.current && rightPanelRef.current) {
+            const vh = window.innerHeight;
+            const viewportCenter = vh * 0.50;
+
+            const rectLeft = leftPanelRef.current.getBoundingClientRect();
+            const rectRight = rightPanelRef.current.getBoundingClientRect();
+
+            const leftCenter = rectLeft.top + rectLeft.height / 2;
+            const rightCenter = rectRight.top + rectRight.height / 2;
+
+            const distLeft = Math.abs(leftCenter - viewportCenter);
+            const distRight = Math.abs(rightCenter - viewportCenter);
+
+            // Focal threshold radius: panel center must be within 28% vh of viewport center
+            const focalRadius = vh * 0.28;
+
+            if (distLeft < focalRadius && distLeft <= distRight) {
+              setActiveMobilePanel("left");
+            } else if (distRight < focalRadius && distRight < distLeft) {
+              setActiveMobilePanel("right");
+            } else {
+              setActiveMobilePanel(null);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.target === leftPanelRef.current) {
-            leftRatio = entry.intersectionRatio;
-          } else if (entry.target === rightPanelRef.current) {
-            rightRatio = entry.intersectionRatio;
-          }
-        });
-        updateActiveMobile();
-      },
-      { threshold: [0, 0.1, 0.25, 0.4, 0.6, 0.8, 1.0] }
-    );
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
 
-    if (leftPanelRef.current) observer.observe(leftPanelRef.current);
-    if (rightPanelRef.current) observer.observe(rightPanelRef.current);
-
-    return () => observer.disconnect();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (

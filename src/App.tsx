@@ -75,7 +75,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-zinc-800 selection:text-white">
+    <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-zinc-800 selection:text-white overflow-x-hidden w-full max-w-full relative">
       
       {/* iOS Style Glass Floating Navigation Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 pt-2 sm:pt-4 pb-2 transition-[padding] duration-300">
