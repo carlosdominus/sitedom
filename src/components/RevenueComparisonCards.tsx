@@ -30,41 +30,53 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger using IntersectionObserver with center focal rootMargin
+  // Mobile scroll trigger: ensures unhovered initial state at top of page, activates on scroll
   useEffect(() => {
     if (window.innerWidth >= 768) return;
 
-    let ratio1 = 0;
-    let ratio2 = 0;
+    let ticking = false;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.target === card1Ref.current) {
-            ratio1 = entry.isIntersecting ? entry.intersectionRatio : 0;
-          } else if (entry.target === card2Ref.current) {
-            ratio2 = entry.isIntersecting ? entry.intersectionRatio : 0;
-          }
-        });
-
-        if (ratio1 > 0.35 && ratio1 >= ratio2) {
-          setHoveredCard(1);
-        } else if (ratio2 > 0.35 && ratio2 > ratio1) {
-          setHoveredCard(2);
-        } else {
-          setHoveredCard(null);
-        }
-      },
-      {
-        rootMargin: "-25% 0px -25% 0px",
-        threshold: [0, 0.25, 0.5, 0.75, 1.0],
+    const handleScroll = () => {
+      // Keep cards in default unhovered state when at top of hero page
+      if (window.scrollY < 100) {
+        setHoveredCard(null);
+        return;
       }
-    );
 
-    if (card1Ref.current) observer.observe(card1Ref.current);
-    if (card2Ref.current) observer.observe(card2Ref.current);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (card1Ref.current && card2Ref.current) {
+            const viewportCenter = window.innerHeight * 0.5;
 
-    return () => observer.disconnect();
+            const rect1 = card1Ref.current.getBoundingClientRect();
+            const rect2 = card2Ref.current.getBoundingClientRect();
+
+            const center1 = rect1.top + rect1.height / 2;
+            const center2 = rect2.top + rect2.height / 2;
+
+            const dist1 = Math.abs(center1 - viewportCenter);
+            const dist2 = Math.abs(center2 - viewportCenter);
+
+            const focalRadius = window.innerHeight * 0.28;
+
+            if (dist1 < focalRadius && dist1 <= dist2) {
+              setHoveredCard(1);
+            } else if (dist2 < focalRadius && dist2 < dist1) {
+              setHoveredCard(2);
+            } else {
+              setHoveredCard(null);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
