@@ -9,6 +9,7 @@ interface Props {
   staggerMs?: number;
   initialDelayMs?: number;
   threshold?: number;
+  immediateVisible?: boolean;
 }
 
 function tokenizeText(text: string, highlights: string[]) {
@@ -60,44 +61,30 @@ function InteractiveGreenWord({
   useEffect(() => {
     if (prefersReducedMotion) return;
 
-    let animId: number;
-    let targetGradPos = 50;
-    let currentGradPos = 50;
-
     const handleMouseMove = (e: MouseEvent) => {
       if (!spanRef.current) return;
       const rect = spanRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const dx = e.clientX - centerX;
       
-      // Map mouse X offset relative to word to gradient shift
+      if (Math.abs(dx) > 350) return;
+
       const distRatio = Math.max(-1, Math.min(1, dx / 250));
-      targetGradPos = 50 + distRatio * 50;
-    };
-
-    const loop = () => {
-      currentGradPos += (targetGradPos - currentGradPos) * 0.1;
-
-      if (spanRef.current) {
-        spanRef.current.style.backgroundPosition = `${currentGradPos.toFixed(1)}% 50%`;
-      }
-
-      animId = requestAnimationFrame(loop);
+      const targetGradPos = 50 + distRatio * 50;
+      spanRef.current.style.backgroundPosition = `${targetGradPos.toFixed(1)}% 50%`;
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    animId = requestAnimationFrame(loop);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(animId);
     };
   }, [prefersReducedMotion]);
 
   return (
     <span
       ref={spanRef}
-      className={`inline-block mr-[0.22em] font-semibold sm:font-bold select-none text-transparent bg-clip-text bg-[length:220%_auto] transition-all duration-200 ${customClassName}`}
+      className={`inline-block mr-[0.22em] font-semibold sm:font-bold select-none text-transparent bg-clip-text bg-[length:220%_auto] transition-all duration-300 ${customClassName}`}
       style={{
         backgroundImage:
           "linear-gradient(110deg, #2bb102 0%, #41F20A 30%, #c4ff9e 50%, #41F20A 70%, #1a8300 100%)",
@@ -106,7 +93,7 @@ function InteractiveGreenWord({
         filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
         transition: prefersReducedMotion
           ? "none"
-          : `opacity 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
+          : `opacity 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms, background-position 0.2s ease-out`,
       }}
     >
       {word}
@@ -123,15 +110,21 @@ export function AnimatedText({
   staggerMs = 35,
   initialDelayMs = 0,
   threshold = 0.2,
+  immediateVisible = false,
 }: Props) {
   const ref = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(immediateVisible);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (mediaQuery.matches) {
       setPrefersReducedMotion(true);
+      setIsVisible(true);
+      return;
+    }
+
+    if (immediateVisible) {
       setIsVisible(true);
       return;
     }
@@ -151,7 +144,7 @@ export function AnimatedText({
     }
 
     return () => observer.disconnect();
-  }, [threshold]);
+  }, [threshold, immediateVisible]);
 
   const tokens = tokenizeText(text, highlights);
 

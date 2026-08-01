@@ -33,39 +33,39 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
     return () => observer.disconnect();
   }, []);
 
-  // Scroll observer on mobile: scale image smoothly when scrolled into focus with rAF throttling
+  // Scroll observer on mobile using IntersectionObserver to avoid forced reflows
   useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (window.innerWidth >= 768) return; // Desktop handles via hover
+    if (window.innerWidth >= 768) return;
 
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const viewportCenter = window.innerHeight / 2;
+    let leftRatio = 0;
+    let rightRatio = 0;
 
-          if (leftPanelRef.current && rightPanelRef.current) {
-            const leftRect = leftPanelRef.current.getBoundingClientRect();
-            const rightRect = rightPanelRef.current.getBoundingClientRect();
-
-            const leftDist = Math.abs(leftRect.top + leftRect.height / 2 - viewportCenter);
-            const rightDist = Math.abs(rightRect.top + rightRect.height / 2 - viewportCenter);
-
-            if (leftDist < rightDist) {
-              setActiveMobilePanel("left");
-            } else {
-              setActiveMobilePanel("right");
-            }
-          }
-          ticking = false;
-        });
-        ticking = true;
+    const updateActiveMobile = () => {
+      if (leftRatio > rightRatio) {
+        setActiveMobilePanel("left");
+      } else if (rightRatio > leftRatio) {
+        setActiveMobilePanel("right");
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.target === leftPanelRef.current) {
+            leftRatio = entry.intersectionRatio;
+          } else if (entry.target === rightPanelRef.current) {
+            rightRatio = entry.intersectionRatio;
+          }
+        });
+        updateActiveMobile();
+      },
+      { threshold: [0.1, 0.3, 0.5, 0.7, 0.9] }
+    );
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    if (leftPanelRef.current) observer.observe(leftPanelRef.current);
+    if (rightPanelRef.current) observer.observe(rightPanelRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
   return (

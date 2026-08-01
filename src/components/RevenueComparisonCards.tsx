@@ -30,60 +30,38 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger with hysteresis to prevent state oscillation/flicker
+  // Mobile scroll trigger using IntersectionObserver to avoid forced layout reflows
   useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      // Only run scroll-activation on mobile screens (< 768px)
-      if (window.innerWidth >= 768) return;
+    if (window.innerWidth >= 768) return;
 
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (card1Ref.current && card2Ref.current) {
-            const viewportCenter = window.innerHeight * 0.5;
+    let ratio1 = 0;
+    let ratio2 = 0;
 
-            const rect1 = card1Ref.current.getBoundingClientRect();
-            const rect2 = card2Ref.current.getBoundingClientRect();
-
-            const center1 = rect1.top + rect1.height / 2;
-            const center2 = rect2.top + rect2.height / 2;
-
-            const dist1 = Math.abs(center1 - viewportCenter);
-            const dist2 = Math.abs(center2 - viewportCenter);
-
-            const enterDist = window.innerHeight * 0.22;
-            const exitDist = window.innerHeight * 0.38;
-
-            setHoveredCard((prev) => {
-              if (prev === 1) {
-                if (dist1 > exitDist) {
-                  if (dist2 < enterDist) return 2;
-                  return null;
-                }
-                return 1;
-              }
-              if (prev === 2) {
-                if (dist2 > exitDist) {
-                  if (dist1 < enterDist) return 1;
-                  return null;
-                }
-                return 2;
-              }
-              // Currently null
-              if (dist1 < enterDist && dist1 <= dist2) return 1;
-              if (dist2 < enterDist) return 2;
-              return null;
-            });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.target === card1Ref.current) {
+            ratio1 = entry.intersectionRatio;
+          } else if (entry.target === card2Ref.current) {
+            ratio2 = entry.intersectionRatio;
           }
-          ticking = false;
         });
-        ticking = true;
-      }
-    };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Trigger initial check
-    return () => window.removeEventListener("scroll", handleScroll);
+        if (ratio1 > 0.4 && ratio1 >= ratio2) {
+          setHoveredCard(1);
+        } else if (ratio2 > 0.4 && ratio2 > ratio1) {
+          setHoveredCard(2);
+        } else if (ratio1 < 0.2 && ratio2 < 0.2) {
+          setHoveredCard(null);
+        }
+      },
+      { threshold: [0.1, 0.3, 0.5, 0.7] }
+    );
+
+    if (card1Ref.current) observer.observe(card1Ref.current);
+    if (card2Ref.current) observer.observe(card2Ref.current);
+
+    return () => observer.disconnect();
   }, []);
 
   return (
