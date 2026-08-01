@@ -95,7 +95,7 @@ function ServiceCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative group bg-zinc-950/90 border rounded-2xl p-6 sm:p-8 backdrop-blur-xl overflow-hidden transition-all duration-300 flex flex-col justify-center ${colSpan} ${className} ${
+      className={`relative group bg-zinc-950/95 border rounded-2xl p-6 sm:p-8 overflow-hidden transition-all duration-300 flex flex-col justify-center ${colSpan} ${className} ${
         isCardHighlighted
           ? "border-[#41F20A]/60 shadow-[0_0_24px_rgba(65,242,10,0.15)]"
           : "border-zinc-800/90 shadow-2xl"
@@ -103,10 +103,12 @@ function ServiceCard({
       style={{
         transform:
           isVisible || prefersReducedMotion
-            ? `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) translateY(0)`
-            : "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(24px)",
+            ? (tilt.rotateX !== 0 || tilt.rotateY !== 0
+                ? `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`
+                : "none")
+            : "perspective(1000px) translateY(24px)",
         opacity: isVisible || prefersReducedMotion ? 1 : 0,
-        filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+        filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
         transition: prefersReducedMotion
           ? "none"
           : `opacity 0.6s ease-out ${delay}ms, transform 0.4s ease-out, border-color 0.3s ease, box-shadow 0.3s ease, filter 0.6s ease-out ${delay}ms`,
@@ -242,8 +244,8 @@ export default function DobraSobreNos() {
                     style={{
                       opacity: isVisible || prefersReducedMotion ? 1 : 0,
                       transform:
-                        isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
-                      filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+                        isVisible || prefersReducedMotion ? "none" : "translateY(16px)",
+                      filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
                       transition: prefersReducedMotion
                         ? "none"
                         : `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
@@ -270,8 +272,8 @@ export default function DobraSobreNos() {
                       style={{
                         opacity: isVisible || prefersReducedMotion ? 1 : 0,
                         transform:
-                          isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
-                        filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+                          isVisible || prefersReducedMotion ? "none" : "translateY(16px)",
+                        filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
                         transition: prefersReducedMotion
                           ? "none"
                           : `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
@@ -290,8 +292,8 @@ export default function DobraSobreNos() {
                       style={{
                         opacity: isVisible || prefersReducedMotion ? 1 : 0,
                         transform:
-                          isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
-                        filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+                          isVisible || prefersReducedMotion ? "none" : "translateY(16px)",
+                        filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
                         transition: prefersReducedMotion
                           ? "none"
                           : `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
@@ -309,8 +311,8 @@ export default function DobraSobreNos() {
                     style={{
                       opacity: isVisible || prefersReducedMotion ? 1 : 0,
                       transform:
-                        isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
-                      filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+                        isVisible || prefersReducedMotion ? "none" : "translateY(16px)",
+                      filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
                       transition: prefersReducedMotion
                         ? "none"
                         : `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,

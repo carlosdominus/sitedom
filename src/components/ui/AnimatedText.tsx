@@ -103,7 +103,7 @@ function InteractiveGreenWord({
           "linear-gradient(110deg, #2bb102 0%, #41F20A 30%, #c4ff9e 50%, #41F20A 70%, #1a8300 100%)",
         backgroundPosition: "50% 50%",
         opacity: isVisible || prefersReducedMotion ? 1 : 0,
-        filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+        filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
         transition: prefersReducedMotion
           ? "none"
           : `opacity 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
@@ -178,8 +178,8 @@ export function AnimatedText({
             className="inline-block mr-[0.25em]"
             style={{
               opacity: isVisible || prefersReducedMotion ? 1 : 0,
-              transform: isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
-              filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+              transform: isVisible || prefersReducedMotion ? "none" : "translateY(16px)",
+              filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
               transition: prefersReducedMotion
                 ? "none"
                 : `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
