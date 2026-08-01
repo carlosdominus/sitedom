@@ -12,6 +12,15 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
   const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(null);
   const [activeMobilePanel, setActiveMobilePanel] = useState<"left" | "right">("left");
   const [isNearViewport, setIsNearViewport] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const sectionRef = useRef<HTMLElement>(null);
   const leftPanelRef = useRef<HTMLDivElement>(null);
@@ -111,7 +120,9 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               ${activeMobilePanel === "left" ? "scale-115 md:scale-100" : "scale-100"}
             `}
             style={{
-              backgroundImage: isNearViewport ? "url('https://dominus.site/image/card1_converted.webp')" : "none"
+              backgroundImage: isNearViewport 
+                ? (isMobile ? "url('https://dominus.site/image/card1-mobile.webp')" : "url('https://dominus.site/image/card1_converted.webp')")
+                : "none"
             }}
           />
           <div 
@@ -197,7 +208,9 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               ${activeMobilePanel === "right" ? "scale-115 md:scale-100" : "scale-100"}
             `}
             style={{
-              backgroundImage: isNearViewport ? "url('https://dominus.site/image/card2_converted.webp')" : "none"
+              backgroundImage: isNearViewport 
+                ? (isMobile ? "url('https://dominus.site/image/card2-mobile.webp')" : "url('https://dominus.site/image/card2_converted.webp')")
+                : "none"
             }}
           />
           <div 
