@@ -30,7 +30,7 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger using IntersectionObserver to avoid forced layout reflows
+  // Mobile scroll trigger using IntersectionObserver with center focal rootMargin
   useEffect(() => {
     if (window.innerWidth >= 768) return;
 
@@ -41,21 +41,24 @@ export default function RevenueComparisonCards() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.target === card1Ref.current) {
-            ratio1 = entry.intersectionRatio;
+            ratio1 = entry.isIntersecting ? entry.intersectionRatio : 0;
           } else if (entry.target === card2Ref.current) {
-            ratio2 = entry.intersectionRatio;
+            ratio2 = entry.isIntersecting ? entry.intersectionRatio : 0;
           }
         });
 
-        if (ratio1 > 0.4 && ratio1 >= ratio2) {
+        if (ratio1 > 0.35 && ratio1 >= ratio2) {
           setHoveredCard(1);
-        } else if (ratio2 > 0.4 && ratio2 > ratio1) {
+        } else if (ratio2 > 0.35 && ratio2 > ratio1) {
           setHoveredCard(2);
-        } else if (ratio1 < 0.2 && ratio2 < 0.2) {
+        } else {
           setHoveredCard(null);
         }
       },
-      { threshold: [0.1, 0.3, 0.5, 0.7] }
+      {
+        rootMargin: "-25% 0px -25% 0px",
+        threshold: [0, 0.25, 0.5, 0.75, 1.0],
+      }
     );
 
     if (card1Ref.current) observer.observe(card1Ref.current);
