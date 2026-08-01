@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 
 import Dobra1Hero from "./components/Dobra1Hero";
 
@@ -68,6 +68,39 @@ export default function App() {
     }
   };
 
+  const handleNavClick = (e?: React.MouseEvent<HTMLAnchorElement>, href?: string) => {
+    if (e) e.preventDefault();
+    const targetHref = href || "#faturamento";
+    if (targetHref === "#onde-atuamos") {
+      if (window.innerWidth >= 768) {
+        window.scrollTo({ top: 1142, behavior: "smooth" });
+      } else {
+        const el = document.getElementById("onde-atuamos");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+        else window.scrollTo({ top: 1142, behavior: "smooth" });
+      }
+    } else if (targetHref === "#trabalhe-conosco") {
+      if (window.innerWidth >= 768) {
+        window.scrollTo({ top: 2142, behavior: "smooth" });
+      } else {
+        const el = document.getElementById("trabalhe-conosco");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+        else window.scrollTo({ top: 2142, behavior: "smooth" });
+      }
+    } else if (targetHref === "#sobre-nos") {
+      const el = document.getElementById("sobre-nos");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else if (targetHref === "#faturamento") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const targetId = targetHref.replace("#", "");
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   const navLinks = [
     { label: "Onde atuamos", href: "#onde-atuamos" },
     { label: "Trabalhe conosco", href: "#trabalhe-conosco" },
@@ -93,7 +126,11 @@ export default function App() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
             
             {/* DOMINUS White Premium Logo - Centered on mobile */}
-            <a href="#faturamento" className="flex items-center justify-center transition">
+            <a 
+              href="#faturamento" 
+              onClick={(e) => handleNavClick(e, "#faturamento")}
+              className="flex items-center justify-center transition"
+            >
               <img 
                 src="https://dominus.site/image/logo-extensa-branca.webp" 
                 alt="DOMINUS"
@@ -112,6 +149,7 @@ export default function App() {
                 <a
                   key={link.label}
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="text-[11px] sm:text-xs md:text-sm font-sans font-semibold text-[#F1F1F1]/80 hover:text-white uppercase tracking-wider transition-colors duration-200 cursor-pointer whitespace-nowrap"
                 >
                   {link.label}
@@ -146,7 +184,7 @@ export default function App() {
           
           <div className="max-w-6xl mx-auto px-4 relative z-10">
             <Dobra1Hero
-              onNext={() => document.getElementById("onde-atuamos")?.scrollIntoView({ behavior: "smooth" })}
+              onNext={() => handleNavClick(undefined, "#onde-atuamos")}
             />
           </div>
           
@@ -186,6 +224,7 @@ export default function App() {
         <Footer 
           onOpenFormTime={openFormTime}
           onOpenFormParceiro={openFormParceiro}
+          onNavClick={(e, href) => handleNavClick(e, href)}
         />
       </Suspense>
 

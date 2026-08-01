@@ -102,24 +102,24 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           ref={leftPanelRef}
           onMouseEnter={() => setHoveredPanel("left")}
           onClick={() => {
-            const el = document.getElementById("trabalhe-conosco");
-            if (el) el.scrollIntoView({ behavior: "smooth" });
+            if (window.innerWidth >= 768) {
+              window.scrollTo({ top: 2142, behavior: "smooth" });
+            } else {
+              const el = document.getElementById("trabalhe-conosco");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+          style={{
+            flex: isMobile ? undefined : (hoveredPanel === "left" ? "85 85 0%" : hoveredPanel === "right" ? "15 15 0%" : "50 50 0%")
           }}
           className={`
             relative w-full md:w-auto aspect-[1080/1440] md:aspect-auto md:h-full overflow-hidden cursor-pointer
             transition-[flex,opacity,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
-            border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-end items-center px-6 sm:px-10 lg:px-16 text-center pt-20 pb-10 sm:pb-14 md:pb-16 lg:pb-20
+            border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-12 sm:py-16 md:py-20
             ${
               activeMobilePanel === "left" 
                 ? "shadow-[inset_0_0_50px_rgba(65,242,10,0.25)] border-[#41F20A]/40 md:border-white/10" 
                 : "opacity-90"
-            }
-            ${
-              hoveredPanel === "left" 
-                ? "md:flex-[4]" 
-                : hoveredPanel === "right" 
-                  ? "md:flex-[1]" 
-                  : "md:flex-[1]"
             }
           `}
         >
@@ -137,8 +137,8 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           />
           <div 
             className={`
-              absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/30 group-hover:via-black/75 transition-opacity duration-500
-              ${activeMobilePanel === "left" ? "via-black/65 bg-black/20" : "via-black/85 bg-black/50"}
+              absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent group-hover:via-black/20 group-hover:from-black/75 transition-opacity duration-500
+              ${activeMobilePanel === "left" ? "via-black/25 bg-black/10" : "via-black/45 bg-black/30"}
             `} 
           />
 
@@ -194,21 +194,17 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               onOpenFormParceiro();
             }
           }}
+          style={{
+            flex: isMobile ? undefined : (hoveredPanel === "right" ? "85 85 0%" : hoveredPanel === "left" ? "15 15 0%" : "50 50 0%")
+          }}
           className={`
             relative w-full md:w-auto aspect-[1080/1440] md:aspect-auto md:h-full overflow-hidden cursor-pointer
             transition-[flex,opacity,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
-            group flex flex-col justify-end items-center px-6 sm:px-10 lg:px-16 text-center pt-20 pb-10 sm:pb-14 md:pb-16 lg:pb-20
+            group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-12 sm:py-16 md:py-20
             ${
               activeMobilePanel === "right" 
                 ? "shadow-[inset_0_0_50px_rgba(65,242,10,0.25)] border-[#41F20A]/40" 
                 : "opacity-90"
-            }
-            ${
-              hoveredPanel === "right" 
-                ? "md:flex-[4]" 
-                : hoveredPanel === "left" 
-                  ? "md:flex-[1]" 
-                  : "md:flex-[1]"
             }
           `}
         >
@@ -226,8 +222,8 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           />
           <div 
             className={`
-              absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/30 group-hover:via-black/75 transition-opacity duration-500
-              ${activeMobilePanel === "right" ? "via-black/65 bg-black/20" : "via-black/85 bg-black/50"}
+              absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent group-hover:via-black/20 group-hover:from-black/75 transition-opacity duration-500
+              ${activeMobilePanel === "right" ? "via-black/25 bg-black/10" : "via-black/45 bg-black/30"}
             `}
           />
 

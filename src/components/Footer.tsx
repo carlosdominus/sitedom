@@ -4,9 +4,10 @@ import { Instagram, Youtube, Linkedin } from "lucide-react";
 interface FooterProps {
   onOpenFormTime?: () => void;
   onOpenFormParceiro?: () => void;
+  onNavClick?: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
 }
 
-export default function Footer({ onOpenFormTime, onOpenFormParceiro }: FooterProps) {
+export default function Footer({ onOpenFormTime, onOpenFormParceiro, onNavClick }: FooterProps) {
   const navLinks = [
     { label: "Onde atuamos", href: "#onde-atuamos" },
     { label: "Sobre nós", href: "#sobre-nos" },
@@ -55,6 +56,16 @@ export default function Footer({ onOpenFormTime, onOpenFormParceiro }: FooterPro
                   <a
                     key={link.label}
                     href={link.href}
+                    onClick={(e) => {
+                      if (onNavClick) {
+                        onNavClick(e, link.href);
+                      } else {
+                        e.preventDefault();
+                        const targetId = link.href.replace("#", "");
+                        const el = document.getElementById(targetId);
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }}
                     className="text-sm font-sans font-medium text-zinc-300 hover:text-[#41F20A] transition-colors duration-200 cursor-pointer w-fit"
                   >
                     {link.label}
@@ -133,6 +144,14 @@ export default function Footer({ onOpenFormTime, onOpenFormParceiro }: FooterPro
           {/* LOGO DA MARCA (No mobile fica após as redes sociais: order-3) */}
           <a 
             href="#faturamento" 
+            onClick={(e) => {
+              if (onNavClick) {
+                onNavClick(e, "#faturamento");
+              } else {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
             className="order-3 md:order-1 group flex items-center focus:outline-none focus:ring-2 focus:ring-[#41F20A] rounded-lg p-1 transition pt-2 md:pt-0"
             aria-label="Ir para o topo - Dominus"
           >
