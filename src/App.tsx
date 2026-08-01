@@ -80,10 +80,14 @@ export default function App() {
       {/* iOS Style Glass Floating Navigation Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 pt-2 sm:pt-4 pb-2 transition-[padding] duration-300">
         <header 
+          style={{
+            WebkitBackdropFilter: scrolled ? "blur(14px)" : "blur(8px)",
+            backdropFilter: scrolled ? "blur(14px)" : "blur(8px)",
+          }}
           className={`max-w-6xl mx-auto rounded-2xl sm:rounded-full transition-[background-color,border-color,padding,box-shadow] duration-500 ${
             scrolled 
-              ? "bg-black/40 backdrop-blur-md border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.5)] py-2 sm:py-2.5 px-4 sm:px-6" 
-              : "bg-transparent border border-transparent py-2 sm:py-4 px-4 sm:px-8"
+              ? "bg-black/75 sm:bg-black/50 border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.8)] py-2 sm:py-2.5 px-4 sm:px-6" 
+              : "bg-black/30 sm:bg-transparent border border-white/10 sm:border-transparent py-2 sm:py-4 px-4 sm:px-8"
           }`}
         >
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
@@ -122,10 +126,9 @@ export default function App() {
       {/* Main Continuous Canvas Stage */}
       <main className="relative pt-0">
         
-        {/* Glow Effects backdrop layout (GPU promoted & scaled) */}
+        {/* Glow Effects backdrop layout */}
         <div 
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[20vw] h-[12.5vh] scale-[4] bg-zinc-900/20 rounded-full blur-[40px] pointer-events-none" 
-          style={{ willChange: "transform", transform: "translate(-50%, 0) translateZ(0)" }}
         />
         
         {/* 1st dob - Faturamento / Intro (Eagerly Loaded LCP Section) */}
@@ -136,10 +139,9 @@ export default function App() {
             backgroundImage: "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 1) 100%), url('https://dominus.site/image/bk.webp')"
           }}
         >
-          {/* Subtle glow underneath (GPU promoted & scaled) */}
+          {/* Subtle glow underneath */}
           <div 
             className="absolute top-0 left-1/2 -translate-x-1/2 w-[20vw] h-[12vh] scale-[3.5] bg-[#1B4D3E]/10 rounded-full blur-[35px] pointer-events-none" 
-            style={{ willChange: "transform", transform: "translate(-50%, 0) translateZ(0)" }}
           />
           
           <div className="max-w-6xl mx-auto px-4 relative z-10">

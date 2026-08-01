@@ -42,22 +42,24 @@ export default function RevenueComparisonCards() {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           if (card1Ref.current && card2Ref.current) {
-            const triggerLine = window.innerHeight * 0.70;
+            const vh = window.innerHeight;
+            const triggerLineCard1 = vh * 0.65; // Card 1 triggers when scrolled into lower-middle
+            const triggerLineCard2 = vh * 0.42; // Card 2 triggers when scrolled into upper-middle (print 6 stage)
 
             const rect1 = card1Ref.current.getBoundingClientRect();
             const rect2 = card2Ref.current.getBoundingClientRect();
 
-            // Card 1 text activates when scrolled down to Card 1, stays active while below
-            if (window.scrollY >= 60 && rect1.top < triggerLine) {
+            // Card 1 text activates when scrolled down to Card 1
+            if (window.scrollY >= 40 && rect1.top < triggerLineCard1 && rect1.bottom > 0) {
               setMobileActive1(true);
-            } else {
+            } else if (rect1.top >= triggerLineCard1) {
               setMobileActive1(false);
             }
 
-            // Card 2 text activates when scrolled down to Card 2, stays active while below
-            if (window.scrollY >= 60 && rect2.top < triggerLine) {
+            // Card 2 text activates when scrolled down to upper-middle (print 6 stage)
+            if (window.scrollY >= 40 && rect2.top < triggerLineCard2 && rect2.bottom > 0) {
               setMobileActive2(true);
-            } else {
+            } else if (rect2.top >= triggerLineCard2) {
               setMobileActive2(false);
             }
           }

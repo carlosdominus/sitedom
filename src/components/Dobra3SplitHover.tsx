@@ -10,7 +10,7 @@ interface Dobra3SplitHoverProps {
 
 export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }: Dobra3SplitHoverProps) {
   const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(null);
-  const [activeMobilePanel, setActiveMobilePanel] = useState<"left" | "right">("left");
+  const [activeMobilePanel, setActiveMobilePanel] = useState<"left" | "right" | null>(null);
   const [isNearViewport, setIsNearViewport] = useState(false);
   const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
 
@@ -50,10 +50,12 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
     let rightRatio = 0;
 
     const updateActiveMobile = () => {
-      if (leftRatio > rightRatio) {
+      if (leftRatio > 0.25 && leftRatio >= rightRatio) {
         setActiveMobilePanel("left");
-      } else if (rightRatio > leftRatio) {
+      } else if (rightRatio > 0.25 && rightRatio > leftRatio) {
         setActiveMobilePanel("right");
+      } else if (leftRatio <= 0.1 && rightRatio <= 0.1) {
+        setActiveMobilePanel(null);
       }
     };
 
@@ -68,7 +70,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
         });
         updateActiveMobile();
       },
-      { threshold: [0.1, 0.3, 0.5, 0.7, 0.9] }
+      { threshold: [0, 0.1, 0.25, 0.4, 0.6, 0.8, 1.0] }
     );
 
     if (leftPanelRef.current) observer.observe(leftPanelRef.current);
@@ -85,7 +87,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
       id="trabalhe-conosco"
     >
       {/* Container: Stacked on mobile (<768px), Flex Row full-width on Desktop (>=768px), Full screen height */}
-      <div className="w-full min-h-screen flex flex-col md:flex-row h-auto md:h-screen transition-[flex,opacity] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
+      <div className="w-full min-h-[100dvh] flex flex-col md:flex-row h-auto md:h-[100dvh] transition-[flex,opacity] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
         
         {/* ================= LEFT PANEL (Recrutamento / Colaboradores) ================= */}
         <div 

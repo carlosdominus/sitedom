@@ -393,6 +393,7 @@ export default function Dobra8WavingFlag() {
   }, []);
 
   const handlePointerMove = (clientX: number, clientY: number) => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
     if (!canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
     const x = clientX - rect.left;
@@ -405,6 +406,7 @@ export default function Dobra8WavingFlag() {
   };
 
   const handlePointerLeave = () => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
     pointerRef.current.targetStrength = 0;
     setIsInteracting(false);
   };
@@ -441,20 +443,9 @@ export default function Dobra8WavingFlag() {
         {/* Waving Flag Canvas Stage */}
         <div 
           ref={containerRef}
-          className="relative w-full max-w-7xl mx-auto flex justify-center items-center cursor-grab active:cursor-grabbing select-none my-2 sm:my-4"
+          className="relative w-full max-w-7xl mx-auto flex justify-center items-center cursor-grab active:cursor-grabbing select-none my-2 sm:my-4 touch-pan-y"
           onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
           onMouseLeave={handlePointerLeave}
-          onTouchStart={(e) => {
-            if (e.touches.length > 0) {
-              handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
-            }
-          }}
-          onTouchMove={(e) => {
-            if (e.touches.length > 0) {
-              handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
-            }
-          }}
-          onTouchEnd={handlePointerLeave}
         >
           <canvas 
             ref={canvasRef} 
