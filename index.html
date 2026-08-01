@@ -14,21 +14,16 @@
 
     <link rel="icon" type="image/png" href="https://dominus.site/slides/mariana/img/favicon.png" />
 
-    <!-- 1. Preconnects (Dominus host first) -->
+    <!-- 1. Preconnects (Dominus host only) -->
     <link rel="preconnect" href="https://dominus.site">
-    <link rel="preconnect" href="https://api.fontshare.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- 2. LCP Image Preload -->
     <link rel="preload" as="image" href="https://dominus.site/image/bk.webp" fetchpriority="high">
 
-    <!-- 3. Async Fonts (Non-render-blocking with reduced weights) -->
-    <link rel="preload" href="https://api.fontshare.com/v2/css?f[]=nohemi@900,800,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=nohemi@900,800,700&display=swap"></noscript>
-
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"></noscript>
+    <!-- 3. Above-the-fold Self-Hosted Font Preloads -->
+    <link rel="preload" href="/fonts/nohemi-800.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/space-grotesk-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/space-grotesk-700.woff2" as="font" type="font/woff2" crossorigin>
   </head>
   <body>
     <div id="root"></div>

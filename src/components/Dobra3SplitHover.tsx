@@ -11,29 +11,54 @@ interface Dobra3SplitHoverProps {
 export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }: Dobra3SplitHoverProps) {
   const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(null);
   const [activeMobilePanel, setActiveMobilePanel] = useState<"left" | "right">("left");
+  const [isNearViewport, setIsNearViewport] = useState(false);
 
+  const sectionRef = useRef<HTMLElement>(null);
   const leftPanelRef = useRef<HTMLDivElement>(null);
   const rightPanelRef = useRef<HTMLDivElement>(null);
 
-  // Scroll observer on mobile: scale image smoothly when scrolled into focus
+  // Lazy load card background images on demand when section approaches viewport
   useEffect(() => {
+    if (!sectionRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px" }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Scroll observer on mobile: scale image smoothly when scrolled into focus with rAF throttling
+  useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
       if (window.innerWidth >= 768) return; // Desktop handles via hover
 
-      const viewportCenter = window.innerHeight / 2;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const viewportCenter = window.innerHeight / 2;
 
-      if (leftPanelRef.current && rightPanelRef.current) {
-        const leftRect = leftPanelRef.current.getBoundingClientRect();
-        const rightRect = rightPanelRef.current.getBoundingClientRect();
+          if (leftPanelRef.current && rightPanelRef.current) {
+            const leftRect = leftPanelRef.current.getBoundingClientRect();
+            const rightRect = rightPanelRef.current.getBoundingClientRect();
 
-        const leftDist = Math.abs(leftRect.top + leftRect.height / 2 - viewportCenter);
-        const rightDist = Math.abs(rightRect.top + rightRect.height / 2 - viewportCenter);
+            const leftDist = Math.abs(leftRect.top + leftRect.height / 2 - viewportCenter);
+            const rightDist = Math.abs(rightRect.top + rightRect.height / 2 - viewportCenter);
 
-        if (leftDist < rightDist) {
-          setActiveMobilePanel("left");
-        } else {
-          setActiveMobilePanel("right");
-        }
+            if (leftDist < rightDist) {
+              setActiveMobilePanel("left");
+            } else {
+              setActiveMobilePanel("right");
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
@@ -45,12 +70,13 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
 
   return (
     <section 
+      ref={sectionRef}
       className="relative w-full bg-black overflow-hidden border-y border-white/10 scroll-mt-20"
       onMouseLeave={() => setHoveredPanel(null)}
       id="trabalhe-conosco"
     >
       {/* Container: Stacked on mobile (<768px), Flex Row full-width on Desktop (>=768px), Full screen height */}
-      <div className="w-full min-h-screen flex flex-col md:flex-row h-auto md:h-screen transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
+      <div className="w-full min-h-screen flex flex-col md:flex-row h-auto md:h-screen transition-[flex,opacity] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
         
         {/* ================= LEFT PANEL (Recrutamento / Colaboradores) ================= */}
         <div 
@@ -62,7 +88,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           }}
           className={`
             relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
-            transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
+            transition-[flex,opacity,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
             border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:py-0
             ${
               activeMobilePanel === "left" 
@@ -85,20 +111,18 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               ${activeMobilePanel === "left" ? "scale-115 md:scale-100" : "scale-100"}
             `}
             style={{
-              backgroundImage: "url('https://dominus.site/image/card1.webp')"
+              backgroundImage: isNearViewport ? "url('https://dominus.site/image/card1_converted.webp')" : "none"
             }}
           />
           <div 
             className={`
-              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50 group-hover:via-black/70 transition-all duration-500
+              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50 group-hover:via-black/70 transition-opacity duration-500
               ${activeMobilePanel === "left" ? "via-black/55 bg-black/20" : "via-black/85 bg-black/50"}
             `} 
           />
 
-
-
           {/* Panel Content Wrapper */}
-          <div className="relative z-10 max-w-xl mx-auto space-y-6 transition-all duration-500">
+          <div className="relative z-10 max-w-xl mx-auto space-y-6 transition-opacity duration-500">
             {/* Title (H2) */}
             <AnimatedText
               as="h2"
@@ -115,7 +139,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               as="p"
               text="Chega de gastar seu talento no mercado de ofertas descartáveis. Na Dominus, você atua nos bastidores de grandes especialistas e autoridades, desenvolvendo estratégias sólidas, escala de alto padrão e um repertório profissional que fica para a sua vida."
               className={`
-                text-zinc-300 font-sans leading-relaxed max-w-md mx-auto transition-all duration-500
+                text-zinc-300 font-sans leading-relaxed max-w-md mx-auto transition-opacity duration-500
                 ${hoveredPanel === "right" ? "opacity-40 text-xs line-clamp-2 md:line-clamp-none" : "text-sm sm:text-base md:text-lg opacity-100"}
               `}
               initialDelayMs={200}
@@ -150,7 +174,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           }}
           className={`
             relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
-            transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
+            transition-[flex,opacity,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
             group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:py-0
             ${
               activeMobilePanel === "right" 
@@ -173,20 +197,18 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               ${activeMobilePanel === "right" ? "scale-115 md:scale-100" : "scale-100"}
             `}
             style={{
-              backgroundImage: "url('https://dominus.site/image/card2.webp')"
+              backgroundImage: isNearViewport ? "url('https://dominus.site/image/card2_converted.webp')" : "none"
             }}
           />
           <div 
             className={`
-              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50 group-hover:via-black/70 transition-all duration-500
+              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50 group-hover:via-black/70 transition-opacity duration-500
               ${activeMobilePanel === "right" ? "via-black/55 bg-black/20" : "via-black/85 bg-black/50"}
             `}
           />
 
-
-
           {/* Panel Content Wrapper */}
-          <div className="relative z-10 max-w-xl mx-auto space-y-6 transition-all duration-500">
+          <div className="relative z-10 max-w-xl mx-auto space-y-6 transition-opacity duration-500">
             {/* Title (H2) */}
             <AnimatedText
               as="h2"

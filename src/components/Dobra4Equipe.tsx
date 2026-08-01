@@ -45,9 +45,15 @@ export default function Dobra4Equipe({ onNext }: Props) {
       className="relative text-white py-12 md:py-20 overflow-hidden" 
       id="dobra4-container"
     >
-      {/* Decorative background lights - Enhanced brand glow */}
-      <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#41F20A]/20 rounded-full blur-[160px] pointer-events-none animate-pulse duration-[8000ms]" />
-      <div className="absolute bottom-[15%] right-[10%] w-[500px] h-[500px] bg-[#41F20A]/8 rounded-full blur-[120px] pointer-events-none" />
+      {/* Decorative background lights - Enhanced brand glow (GPU promoted & scaled) */}
+      <div 
+        className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] scale-[4] bg-[#41F20A]/20 rounded-full blur-[40px] pointer-events-none animate-pulse duration-[8000ms]" 
+        style={{ willChange: "transform", transform: "translate(-50%, -50%) translateZ(0)" }}
+      />
+      <div 
+        className="absolute bottom-[15%] right-[10%] w-[150px] h-[150px] scale-[3.33] bg-[#41F20A]/8 rounded-full blur-[35px] pointer-events-none" 
+        style={{ willChange: "transform", transform: "translateZ(0)" }}
+      />
 
       {/* Category Header Badge */}
       <div className="relative z-10 space-y-4 max-w-4xl mx-auto text-center mb-10 md:mb-16 px-4">

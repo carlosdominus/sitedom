@@ -26,24 +26,32 @@ function ServiceCard({
   const [isMobileActive, setIsMobileActive] = useState(false);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
 
-  // Mobile scroll trigger: illuminates card when centered in viewport on mobile (< 1024px)
+  // Mobile scroll trigger: illuminates card when centered in viewport on mobile (< 1024px) with rAF throttling
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
       if (window.innerWidth >= 1024) {
         setIsMobileActive(false);
         return;
       }
-      if (!cardRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-      const viewportCenter = window.innerHeight * 0.5;
-      const cardCenter = rect.top + rect.height / 2;
-      const distanceToCenter = Math.abs(cardCenter - viewportCenter);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (cardRef.current) {
+            const rect = cardRef.current.getBoundingClientRect();
+            const viewportCenter = window.innerHeight * 0.5;
+            const cardCenter = rect.top + rect.height / 2;
+            const distanceToCenter = Math.abs(cardCenter - viewportCenter);
 
-      // Activate highlight when the card is in the vertical center focal zone
-      if (distanceToCenter < window.innerHeight * 0.28) {
-        setIsMobileActive(true);
-      } else {
-        setIsMobileActive(false);
+            // Activate highlight when the card is in the vertical center focal zone
+            if (distanceToCenter < window.innerHeight * 0.28) {
+              setIsMobileActive(true);
+            } else {
+              setIsMobileActive(false);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
@@ -204,8 +212,11 @@ export default function DobraSobreNos() {
       id="sobre-nos"
       className="w-full bg-[#0a0a0a] py-[clamp(80px,10vh,140px)] px-4 sm:px-6 md:px-12 relative overflow-hidden border-t border-zinc-900/80 scroll-mt-20"
     >
-      {/* Subtle Static Ambient Background Glow */}
-      <div className="absolute top-1/3 left-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-[#41F20A]/5 rounded-full blur-[140px] pointer-events-none" />
+      {/* Subtle Static Ambient Background Glow (GPU promoted & scaled) */}
+      <div 
+        className="absolute top-1/3 left-1/4 -translate-y-1/2 w-[150px] h-[150px] scale-[3.33] bg-[#41F20A]/5 rounded-full blur-[35px] pointer-events-none" 
+        style={{ willChange: "transform", transform: "translate3d(0, -50%, 0)" }}
+      />
 
       <div className="max-w-7xl mx-auto relative z-10">
         

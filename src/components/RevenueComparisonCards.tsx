@@ -30,33 +30,41 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger: activates hover state automatically as user scrolls down on mobile
+  // Mobile scroll trigger: activates hover state automatically as user scrolls down on mobile with rAF throttling
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
       // Only run scroll-activation on mobile screens (< 768px)
       if (window.innerWidth >= 768) return;
-      if (!card1Ref.current || !card2Ref.current) return;
 
-      const viewportCenter = window.innerHeight * 0.5;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (card1Ref.current && card2Ref.current) {
+            const viewportCenter = window.innerHeight * 0.5;
 
-      const rect1 = card1Ref.current.getBoundingClientRect();
-      const rect2 = card2Ref.current.getBoundingClientRect();
+            const rect1 = card1Ref.current.getBoundingClientRect();
+            const rect2 = card2Ref.current.getBoundingClientRect();
 
-      const center1 = rect1.top + rect1.height / 2;
-      const center2 = rect2.top + rect2.height / 2;
+            const center1 = rect1.top + rect1.height / 2;
+            const center2 = rect2.top + rect2.height / 2;
 
-      const dist1 = Math.abs(center1 - viewportCenter);
-      const dist2 = Math.abs(center2 - viewportCenter);
+            const dist1 = Math.abs(center1 - viewportCenter);
+            const dist2 = Math.abs(center2 - viewportCenter);
 
-      // Only trigger hover panel when the card is within the center focus zone of the screen
-      const maxTriggerDistance = window.innerHeight * 0.3;
+            // Only trigger hover panel when the card is within the center focus zone of the screen
+            const maxTriggerDistance = window.innerHeight * 0.3;
 
-      if (dist2 < maxTriggerDistance && dist2 <= dist1) {
-        setHoveredCard(2);
-      } else if (dist1 < maxTriggerDistance) {
-        setHoveredCard(1);
-      } else {
-        setHoveredCard(null);
+            if (dist2 < maxTriggerDistance && dist2 <= dist1) {
+              setHoveredCard(2);
+            } else if (dist1 < maxTriggerDistance) {
+              setHoveredCard(1);
+            } else {
+              setHoveredCard(null);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 

@@ -1,9 +1,68 @@
 @import "tailwindcss";
 
+/* ================= LOCAL FONTS (SELF-HOSTED) ================= */
+/* Nohemi */
+@font-face {
+  font-family: 'Nohemi';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/nohemi-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Nohemi';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/nohemi-800.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Nohemi';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/nohemi-900.woff2') format('woff2');
+}
+
+/* Space Grotesk */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-700.woff2') format('woff2');
+}
+
 @theme {
   --font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-heading: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-nohemi: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: "Nohemi", "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-nohemi: "Nohemi", "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "Space Grotesk", monospace;
 }
 

@@ -7,19 +7,27 @@ export default function Dobra2VSL() {
   const [atuamosX, setAtuamosX] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      
-      const totalDistance = windowHeight + rect.height;
-      const currentProgress = (windowHeight - rect.top) / totalDistance;
-      const clamped = Math.max(0, Math.min(1, currentProgress));
-      
-      // Parallax horizontal movement on scroll
-      const moveAmount = (clamped - 0.5) * 180;
-      setOndeX(moveAmount);
-      setAtuamosX(-moveAmount);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (sectionRef.current) {
+            const rect = sectionRef.current.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            const totalDistance = windowHeight + rect.height;
+            const currentProgress = (windowHeight - rect.top) / totalDistance;
+            const clamped = Math.max(0, Math.min(1, currentProgress));
+            
+            // Parallax horizontal movement on scroll
+            const moveAmount = (clamped - 0.5) * 180;
+            setOndeX(moveAmount);
+            setAtuamosX(-moveAmount);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
