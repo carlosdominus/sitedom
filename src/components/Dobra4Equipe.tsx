@@ -61,7 +61,7 @@ export default function Dobra4Equipe({ onNext }: Props) {
           <Sparkles size={11} className="animate-pulse" />
           Estudo de Caso Prático
         </div>
-        <h2 className="text-3xl md:text-5.5xl font-extrabold font-heading tracking-tight leading-none text-white">
+        <h2 className="text-3xl md:text-5.5xl font-extrabold tracking-tight leading-none text-white">
           Exemplos na prática
         </h2>
       </div>
@@ -74,7 +74,7 @@ export default function Dobra4Equipe({ onNext }: Props) {
           
           {/* Header section with Instagram Link */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
-            <h3 className="text-xl md:text-2xl lg:text-[26px] font-extrabold font-heading text-white tracking-wide leading-[1.1] min-w-0 md:min-w-[340px]">
+            <h3 className="text-xl md:text-2xl lg:text-[26px] font-extrabold text-white tracking-wide leading-[1.1] min-w-0 md:min-w-[340px]">
               Os melhores<br />
               conteúdos do<br />
               seu perfil.
@@ -168,7 +168,7 @@ export default function Dobra4Equipe({ onNext }: Props) {
           
           {/* Header section with Instagram Link */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
-            <h3 className="text-xl md:text-2xl lg:text-[26px] font-extrabold font-heading text-white tracking-wide leading-[1.1] min-w-0 md:min-w-[340px]">
+            <h3 className="text-xl md:text-2xl lg:text-[26px] font-extrabold text-white tracking-wide leading-[1.1] min-w-0 md:min-w-[340px]">
               <span className="whitespace-nowrap">Porque grandes</span><br />
               <span className="whitespace-nowrap">perfis sempre</span><br />
               <span className="whitespace-nowrap">viralizam?</span>

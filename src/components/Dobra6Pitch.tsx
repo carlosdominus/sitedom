@@ -124,7 +124,7 @@ export default function Dobra6Pitch({ onPrev }: Props) {
         </div>
         
         {/* Title optimized to occupy max 2 lines easily on desktop/mobile */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black font-heading tracking-tight leading-tight text-white max-w-2xl mx-auto">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight text-white max-w-2xl mx-auto">
           Simulador técnico de ganhos
         </h2>
 

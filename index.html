@@ -17,22 +17,13 @@
     <!-- 1. Preconnects -->
     <!-- Preconnect to dominus.site while testing cross-domain (remove when running directly on same origin) -->
     <link rel="preconnect" href="https://dominus.site">
-    <link rel="preconnect" href="https://api.fontshare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- 2. LCP Image Preload -->
     <link rel="preload" as="image" href="https://dominus.site/image/bk.webp" fetchpriority="high">
 
-    <!-- 3. Async Fonts (Non-render-blocking) -->
-    <link rel="preload" as="style"
-          href="https://api.fontshare.com/v2/css?f[]=nohemi@700,800,900&display=swap"
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-      <link rel="stylesheet"
-            href="https://api.fontshare.com/v2/css?f[]=nohemi@700,800,900&display=swap">
-    </noscript>
-
+    <!-- 3. Async Fonts (Space Grotesk - Non-render-blocking) -->
     <link rel="preload" as="style"
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
           onload="this.onload=null;this.rel='stylesheet'">

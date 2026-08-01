@@ -168,7 +168,7 @@ export default function Dobra2VSL() {
           <AnimatedText
             as="h2"
             text={headlineText}
-            className="text-[clamp(1.7rem,4.2vw,3.2rem)] font-extrabold font-heading text-white leading-snug sm:leading-normal tracking-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
+            className="text-[clamp(1.7rem,4.2vw,3.2rem)] font-bold text-white leading-snug sm:leading-normal tracking-normal drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
             initialDelayMs={150}
           />
 

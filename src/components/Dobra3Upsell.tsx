@@ -19,7 +19,7 @@ export default function Dobra3Upsell({ onNext, onPrev }: Props) {
           <Percent size={11} className="text-[#41F20A]" />
           LTV & Maximização do Carrinho
         </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold font-heading tracking-tight leading-none text-white">
+        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-none text-white">
           Upsell pós-compra imediato
         </h2>
         <p className="font-sans text-zinc-400 text-sm md:text-md leading-relaxed max-w-xl">

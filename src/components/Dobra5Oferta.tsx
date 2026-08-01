@@ -25,7 +25,7 @@ export default function Dobra5Oferta({ onNext, onPrev }: Props) {
         <AnimatedText
           as="h2"
           text="A equipe ao seu lado"
-          className="text-3xl md:text-5xl font-extrabold font-heading tracking-tight leading-none text-white"
+          className="text-3xl md:text-5xl font-extrabold tracking-tight leading-none text-white"
         />
         <AnimatedText
           as="p"

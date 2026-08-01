@@ -388,7 +388,7 @@ export default function Dobra7LogoAnimation() {
         </div>
 
         <div className="space-y-3 max-w-2xl mx-auto">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-black font-heading tracking-tight leading-tight text-white">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight leading-tight text-white">
             Nossa assinatura de escala
           </h2>
           <p className="font-sans text-xs text-zinc-400 max-w-lg mx-auto leading-relaxed">

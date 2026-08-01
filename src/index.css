@@ -2,8 +2,8 @@
 
 @theme {
   --font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-heading: "Nohemi", "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-nohemi: "Nohemi", "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-nohemi: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "Space Grotesk", monospace;
 }
 
