@@ -12,11 +12,14 @@ export default defineConfig(() => {
       },
     },
     build: {
+      target: 'esnext',
+      cssMinify: true,
       rollupOptions: {
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom'],
             motion: ['motion'],
+            icons: ['lucide-react'],
           },
         },
       },
