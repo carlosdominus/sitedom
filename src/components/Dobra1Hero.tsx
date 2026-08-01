@@ -18,7 +18,7 @@ export default function Dobra1Hero({ onNext }: Props) {
           as="h1"
           text="Um ambiente onde o básico é escalável e crescer é inevitável."
           highlights={["crescer é inevitável."]}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-normal text-white leading-tight max-w-5xl mx-auto"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight text-white leading-tight max-w-5xl mx-auto"
         />
         <AnimatedText
           as="p"
