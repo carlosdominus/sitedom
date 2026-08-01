@@ -10,15 +10,6 @@ interface Props {
 export default function Dobra1Hero({ onNext }: Props) {
   return (
     <div className="w-full relative pt-2 pb-2 md:pt-4 md:pb-6 text-center z-10 space-y-8 md:space-y-12">
-      {/* Hidden eager image element for LCP asset discovery */}
-      <img
-        src="https://dominus.site/image/bk.webp"
-        alt=""
-        aria-hidden="true"
-        fetchPriority="high"
-        decoding="sync"
-        className="hidden"
-      />
       
 
       {/* Main Hero Header Title */}

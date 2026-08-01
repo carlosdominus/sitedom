@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, ElementType, MouseEvent } from "react";
+import { useEffect, useRef, useState, ElementType } from "react";
 
 interface Props {
   text: string;
@@ -47,7 +47,6 @@ function InteractiveGreenWord({
   isVisible,
   delay,
   prefersReducedMotion,
-  immediateVisible = false,
   customClassName = "",
 }: {
   key?: number | string;
@@ -55,35 +54,44 @@ function InteractiveGreenWord({
   isVisible: boolean;
   delay: number;
   prefersReducedMotion: boolean;
-  immediateVisible?: boolean;
   customClassName?: string;
 }) {
   const spanRef = useRef<HTMLSpanElement>(null);
 
-  const handleMouseMove = (e: MouseEvent<HTMLSpanElement>) => {
-    if (prefersReducedMotion || !spanRef.current) return;
-    const rect = spanRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const dx = e.clientX - centerX;
-    const distRatio = Math.max(-1, Math.min(1, dx / 250));
-    const targetGradPos = 50 + distRatio * 50;
-    spanRef.current.style.backgroundPosition = `${targetGradPos.toFixed(1)}% 50%`;
-  };
+  useEffect(() => {
+    if (prefersReducedMotion) return;
 
-  const isEager = immediateVisible || prefersReducedMotion;
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!spanRef.current) return;
+      const rect = spanRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const dx = e.clientX - centerX;
+      
+      if (Math.abs(dx) > 350) return;
+
+      const distRatio = Math.max(-1, Math.min(1, dx / 250));
+      const targetGradPos = 50 + distRatio * 50;
+      spanRef.current.style.backgroundPosition = `${targetGradPos.toFixed(1)}% 50%`;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [prefersReducedMotion]);
 
   return (
     <span
       ref={spanRef}
-      onMouseMove={handleMouseMove}
       className={`inline-block mr-[0.22em] font-semibold sm:font-bold select-none text-transparent bg-clip-text bg-[length:220%_auto] transition-all duration-300 ${customClassName}`}
       style={{
         backgroundImage:
           "linear-gradient(110deg, #2bb102 0%, #41F20A 30%, #c4ff9e 50%, #41F20A 70%, #1a8300 100%)",
         backgroundPosition: "50% 50%",
-        opacity: isEager || isVisible ? 1 : 0,
-        filter: isEager || isVisible ? "none" : "blur(4px)",
-        transition: isEager
+        opacity: isVisible || prefersReducedMotion ? 1 : 0,
+        filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
+        transition: prefersReducedMotion
           ? "none"
           : `opacity 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms, background-position 0.2s ease-out`,
       }}
@@ -139,7 +147,6 @@ export function AnimatedText({
   }, [threshold, immediateVisible]);
 
   const tokens = tokenizeText(text, highlights);
-  const isEager = immediateVisible || prefersReducedMotion;
 
   return (
     <Component ref={ref as any} className={`break-words max-w-full ${className}`}>
@@ -153,7 +160,6 @@ export function AnimatedText({
               isVisible={isVisible}
               delay={delay}
               prefersReducedMotion={prefersReducedMotion}
-              immediateVisible={immediateVisible}
               customClassName={highlightClassName}
             />
           );
@@ -164,10 +170,10 @@ export function AnimatedText({
             key={idx}
             className="inline-block mr-[0.25em]"
             style={{
-              opacity: isEager || isVisible ? 1 : 0,
-              transform: isEager || isVisible ? "none" : "translateY(16px)",
-              filter: isEager || isVisible ? "none" : "blur(4px)",
-              transition: isEager
+              opacity: isVisible || prefersReducedMotion ? 1 : 0,
+              transform: isVisible || prefersReducedMotion ? "none" : "translateY(16px)",
+              filter: isVisible || prefersReducedMotion ? "none" : "blur(4px)",
+              transition: prefersReducedMotion
                 ? "none"
                 : `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
             }}
