@@ -96,9 +96,9 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
             if (el) el.scrollIntoView({ behavior: "smooth" });
           }}
           className={`
-            relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
+            relative w-full md:w-auto aspect-[1080/1440] md:aspect-auto md:h-full overflow-hidden cursor-pointer
             transition-[flex,opacity,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
-            border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:pt-24 md:pb-12
+            border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-end items-center px-6 sm:px-10 lg:px-16 text-center pt-20 pb-10 sm:pb-14 md:pb-16 lg:pb-20
             ${
               activeMobilePanel === "left" 
                 ? "shadow-[inset_0_0_50px_rgba(65,242,10,0.25)] border-[#41F20A]/40 md:border-white/10" 
@@ -127,8 +127,8 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           />
           <div 
             className={`
-              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50 group-hover:via-black/70 transition-opacity duration-500
-              ${activeMobilePanel === "left" ? "via-black/55 bg-black/20" : "via-black/85 bg-black/50"}
+              absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/30 group-hover:via-black/75 transition-opacity duration-500
+              ${activeMobilePanel === "left" ? "via-black/65 bg-black/20" : "via-black/85 bg-black/50"}
             `} 
           />
 
@@ -184,9 +184,9 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
             }
           }}
           className={`
-            relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
+            relative w-full md:w-auto aspect-[1080/1440] md:aspect-auto md:h-full overflow-hidden cursor-pointer
             transition-[flex,opacity,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
-            group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:pt-24 md:pb-12
+            group flex flex-col justify-end items-center px-6 sm:px-10 lg:px-16 text-center pt-20 pb-10 sm:pb-14 md:pb-16 lg:pb-20
             ${
               activeMobilePanel === "right" 
                 ? "shadow-[inset_0_0_50px_rgba(65,242,10,0.25)] border-[#41F20A]/40" 
@@ -215,8 +215,8 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           />
           <div 
             className={`
-              absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50 group-hover:via-black/70 transition-opacity duration-500
-              ${activeMobilePanel === "right" ? "via-black/55 bg-black/20" : "via-black/85 bg-black/50"}
+              absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/30 group-hover:via-black/75 transition-opacity duration-500
+              ${activeMobilePanel === "right" ? "via-black/65 bg-black/20" : "via-black/85 bg-black/50"}
             `}
           />
 

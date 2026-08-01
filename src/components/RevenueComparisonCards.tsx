@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 
 export default function RevenueComparisonCards() {
   const [hoveredCard, setHoveredCard] = useState<1 | 2 | null>(null);
+  const [mobileActive1, setMobileActive1] = useState(false);
+  const [mobileActive2, setMobileActive2] = useState(false);
 
   const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
@@ -30,41 +32,33 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger: ensures unhovered initial state at top of page, activates on scroll
+  // Mobile scroll trigger: activates text overlay when scrolled down into card, keeps text visible when further down, reverts only when scrolling back up above threshold
   useEffect(() => {
     if (window.innerWidth >= 768) return;
 
     let ticking = false;
 
     const handleScroll = () => {
-      // Keep cards in default unhovered state when at top of hero page
-      if (window.scrollY < 100) {
-        setHoveredCard(null);
-        return;
-      }
-
       if (!ticking) {
         window.requestAnimationFrame(() => {
           if (card1Ref.current && card2Ref.current) {
-            const viewportCenter = window.innerHeight * 0.5;
+            const triggerLine = window.innerHeight * 0.70;
 
             const rect1 = card1Ref.current.getBoundingClientRect();
             const rect2 = card2Ref.current.getBoundingClientRect();
 
-            const center1 = rect1.top + rect1.height / 2;
-            const center2 = rect2.top + rect2.height / 2;
-
-            const dist1 = Math.abs(center1 - viewportCenter);
-            const dist2 = Math.abs(center2 - viewportCenter);
-
-            const focalRadius = window.innerHeight * 0.28;
-
-            if (dist1 < focalRadius && dist1 <= dist2) {
-              setHoveredCard(1);
-            } else if (dist2 < focalRadius && dist2 < dist1) {
-              setHoveredCard(2);
+            // Card 1 text activates when scrolled down to Card 1, stays active while below
+            if (window.scrollY >= 60 && rect1.top < triggerLine) {
+              setMobileActive1(true);
             } else {
-              setHoveredCard(null);
+              setMobileActive1(false);
+            }
+
+            // Card 2 text activates when scrolled down to Card 2, stays active while below
+            if (window.scrollY >= 60 && rect2.top < triggerLine) {
+              setMobileActive2(true);
+            } else {
+              setMobileActive2(false);
             }
           }
           ticking = false;
@@ -78,6 +72,9 @@ export default function RevenueComparisonCards() {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const isCard1Active = hoveredCard === 1 || mobileActive1;
+  const isCard2Active = hoveredCard === 2 || mobileActive2;
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-4 space-y-4">
@@ -112,7 +109,7 @@ export default function RevenueComparisonCards() {
             {/* 3. Badges de percentual / metrica (centralizado no mobile, esquerda no desktop) */}
             <div
               className={`relative z-10 flex items-center justify-center md:justify-start gap-2 flex-wrap transition-all duration-300 ${
-                hoveredCard === 1 ? "opacity-0 -translate-y-2 pointer-events-none" : "opacity-100 translate-y-0"
+                isCard1Active ? "opacity-0 -translate-y-2 pointer-events-none" : "opacity-100 translate-y-0"
               }`}
             >
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900/90 border border-zinc-700/60 text-zinc-300 text-xs font-mono font-medium shadow-sm backdrop-blur-md">
@@ -128,13 +125,13 @@ export default function RevenueComparisonCards() {
             {/* 4. Barras do Gráfico (Sozinho) */}
             <div className="relative z-10 h-28 sm:h-30 w-full flex items-end justify-between gap-2.5 pt-2 px-2">
               {card1Bars.map((bar, idx) => {
-                const heightPercent = hoveredCard === 1 ? bar.hoverHeight : bar.defaultHeight;
+                const heightPercent = isCard1Active ? bar.hoverHeight : bar.defaultHeight;
                 return (
                   <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
                     <div className="w-full bg-zinc-900/40 rounded-t-sm h-full flex items-end overflow-hidden">
                       <div
                         className={`w-full rounded-t-md transition-all duration-500 ${
-                          hoveredCard === 1
+                          isCard1Active
                             ? "bg-gradient-to-t from-zinc-700 to-zinc-500 shadow-[0_0_8px_rgba(161,161,170,0.3)]"
                             : "bg-gradient-to-t from-zinc-900 via-zinc-800 to-zinc-600"
                         }`}
@@ -155,7 +152,7 @@ export default function RevenueComparisonCards() {
             {/* 5. Painel no Hover (Legenda deslizante) */}
             <div
               className={`absolute inset-x-0 bottom-0 z-20 p-5 bg-gradient-to-t from-[#090a0e] via-[#090a0e]/95 to-transparent flex flex-col justify-end transition-all duration-500 ease-[cubic-bezier(0.6,0.6,0,1)] ${
-                hoveredCard === 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full pointer-events-none"
+                isCard1Active ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full pointer-events-none"
               }`}
             >
               <div className="space-y-1">
@@ -208,7 +205,7 @@ export default function RevenueComparisonCards() {
             {/* 3. Badges de percentual / metrica (centralizado no mobile, esquerda no desktop) */}
             <div
               className={`relative z-10 flex items-center justify-center md:justify-start gap-2 flex-wrap transition-all duration-300 ${
-                hoveredCard === 2 ? "opacity-0 -translate-y-2 pointer-events-none" : "opacity-100 translate-y-0"
+                isCard2Active ? "opacity-0 -translate-y-2 pointer-events-none" : "opacity-100 translate-y-0"
               }`}
             >
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#41F20A]/15 border border-[#41F20A]/50 text-[#41F20A] text-xs font-mono font-bold shadow-[0_0_15px_rgba(65,242,10,0.3)] backdrop-blur-md">
@@ -224,7 +221,7 @@ export default function RevenueComparisonCards() {
             {/* 4. Barras do Gráfico (Com a Dominus) */}
             <div className="relative z-10 h-28 sm:h-30 w-full flex items-end justify-between gap-2.5 pt-2 px-2">
               {card2Bars.map((bar, idx) => {
-                const heightPercent = hoveredCard === 2 ? bar.hoverHeight : bar.defaultHeight;
+                const heightPercent = isCard2Active ? bar.hoverHeight : bar.defaultHeight;
                 const isClimaxBar = idx >= card2Bars.length - 2;
 
                 return (
@@ -232,7 +229,7 @@ export default function RevenueComparisonCards() {
                     <div className="w-full bg-zinc-900/40 rounded-t-sm h-full flex items-end overflow-hidden">
                       <div
                         className={`w-full rounded-t-md transition-all duration-500 ${
-                          hoveredCard === 2
+                          isCard2Active
                             ? "bg-gradient-to-t from-[#41F20A] via-[#61f533] to-[#bbfca6] shadow-[0_0_18px_rgba(65,242,10,0.8)]"
                             : isClimaxBar
                             ? "bg-gradient-to-t from-[#41F20A]/50 via-[#41F20A] to-[#80ff54] shadow-[0_0_10px_rgba(65,242,10,0.4)]"
@@ -246,7 +243,7 @@ export default function RevenueComparisonCards() {
                     </div>
                     <span
                       className={`text-[10px] font-mono transition-colors ${
-                        hoveredCard === 2 || isClimaxBar ? "text-[#41F20A] font-bold" : "text-zinc-500"
+                        isCard2Active || isClimaxBar ? "text-[#41F20A] font-bold" : "text-zinc-500"
                       }`}
                     >
                       {bar.label}
@@ -259,7 +256,7 @@ export default function RevenueComparisonCards() {
             {/* 5. Painel no Hover (Legenda deslizante) */}
             <div
               className={`absolute inset-x-0 bottom-0 z-20 p-5 bg-gradient-to-t from-[#090a0e] via-[#090a0e]/95 to-transparent flex flex-col justify-end transition-all duration-500 ease-[cubic-bezier(0.6,0.6,0,1)] ${
-                hoveredCard === 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full pointer-events-none"
+                isCard2Active ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full pointer-events-none"
               }`}
             >
               <div className="space-y-1">
