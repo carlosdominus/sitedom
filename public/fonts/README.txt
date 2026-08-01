@@ -1,8 +1,5 @@
-# Font folder for self-hosted woff2 files:
-# nohemi-700.woff2
-# nohemi-800.woff2
-# nohemi-900.woff2
-# space-grotesk-400.woff2
-# space-grotesk-500.woff2
-# space-grotesk-600.woff2
-# space-grotesk-700.woff2
+# Font files to place in /public/fonts/ for self-hosting:
+# 1. space-grotesk-variable.woff2 (22 KB, variable font covering weights 300 to 700)
+# 2. nohemi-700.woff2
+# 3. nohemi-800.woff2
+# 4. nohemi-900.woff2

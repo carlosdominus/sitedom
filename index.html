@@ -14,16 +14,15 @@
 
     <link rel="icon" type="image/png" href="https://dominus.site/slides/mariana/img/favicon.png" />
 
-    <!-- 1. Preconnects (Dominus host only) -->
+    <!-- 1. Preconnects -->
+    <!-- Preconnect to dominus.site while testing cross-domain (remove when running directly on same origin) -->
     <link rel="preconnect" href="https://dominus.site">
 
     <!-- 2. LCP Image Preload -->
     <link rel="preload" as="image" href="https://dominus.site/image/bk.webp" fetchpriority="high">
 
-    <!-- 3. Above-the-fold Self-Hosted Font Preloads -->
-    <link rel="preload" href="/fonts/nohemi-800.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/space-grotesk-400.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/space-grotesk-700.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- 3. Above-the-fold Self-Hosted Font Preload (Space Grotesk Variable) -->
+    <link rel="preload" href="/fonts/space-grotesk-variable.woff2" as="font" type="font/woff2" crossorigin>
   </head>
   <body>
     <div id="root"></div>
