@@ -143,26 +143,27 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           />
 
           {/* Panel Content Wrapper */}
-          <div className="relative z-10 max-w-xl mx-auto space-y-6 transition-opacity duration-500">
+          <div className={`
+            relative z-10 max-w-xl mx-auto space-y-6 transition-all duration-500 ease-out
+            ${
+              hoveredPanel === "right" 
+                ? "md:opacity-0 md:pointer-events-none md:translate-y-6 md:scale-95" 
+                : "md:opacity-100 md:pointer-events-auto md:translate-y-0 md:scale-100"
+            }
+          `}>
             {/* Title (H2) */}
             <AnimatedText
               as="h2"
               text="Uma equipe onde sua carreira cresce como juros compostos"
               highlights={["juros compostos"]}
-              className={`
-                font-heading font-extrabold text-white tracking-tight leading-tight transition-all duration-500
-                ${hoveredPanel === "right" ? "text-xl md:text-2xl" : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl"}
-              `}
+              className="font-heading font-extrabold text-white tracking-tight leading-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
             />
 
             {/* Subtitle */}
             <AnimatedText
               as="p"
               text="Chega de gastar seu talento no mercado de ofertas descartáveis. Na Dominus, você atua nos bastidores de grandes especialistas e autoridades, desenvolvendo estratégias sólidas, escala de alto padrão e um repertório profissional que fica para a sua vida."
-              className={`
-                text-zinc-300 font-sans leading-relaxed max-w-md mx-auto transition-opacity duration-500
-                ${hoveredPanel === "right" ? "opacity-40 text-xs line-clamp-2 md:line-clamp-none" : "text-sm sm:text-base md:text-lg opacity-100"}
-              `}
+              className="text-zinc-300 font-sans leading-relaxed max-w-md mx-auto text-sm sm:text-base md:text-lg"
               initialDelayMs={200}
             />
 
@@ -231,26 +232,27 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           />
 
           {/* Panel Content Wrapper */}
-          <div className="relative z-10 max-w-xl mx-auto space-y-6 transition-opacity duration-500">
+          <div className={`
+            relative z-10 max-w-xl mx-auto space-y-6 transition-all duration-500 ease-out
+            ${
+              hoveredPanel === "left" 
+                ? "md:opacity-0 md:pointer-events-none md:translate-y-6 md:scale-95" 
+                : "md:opacity-100 md:pointer-events-auto md:translate-y-0 md:scale-100"
+            }
+          `}>
             {/* Title (H2) */}
             <AnimatedText
               as="h2"
               text="Domine o seu mercado e multiplique seus resultados"
               highlights={["multiplique seus resultados"]}
-              className={`
-                font-heading font-extrabold text-white tracking-tight leading-tight transition-all duration-500
-                ${hoveredPanel === "left" ? "text-xl md:text-2xl" : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl"}
-              `}
+              className="font-heading font-extrabold text-white tracking-tight leading-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
             />
 
             {/* Subtitle */}
             <AnimatedText
               as="p"
               text="Tenha uma equipe completa de bastidores cuidando do seu posicionamento, tráfego, vendas e escala enquanto você foca naquilo em que é impecável."
-              className={`
-                text-zinc-300 font-sans leading-relaxed max-w-md mx-auto transition-all duration-500
-                ${hoveredPanel === "left" ? "opacity-40 text-xs line-clamp-2 md:line-clamp-none" : "text-sm sm:text-base md:text-lg opacity-100"}
-              `}
+              className="text-zinc-300 font-sans leading-relaxed max-w-md mx-auto text-sm sm:text-base md:text-lg"
               initialDelayMs={200}
             />
 

@@ -21,8 +21,8 @@ export default function Dobra8WavingFlag() {
 
     // Grid resolution
     const isMobile = window.innerWidth < 640;
-    const COLS = isMobile ? 18 : 32;
-    const ROWS = isMobile ? 12 : 20;
+    const COLS = isMobile ? 18 : 22;
+    const ROWS = isMobile ? 12 : 14;
 
     // Offscreen Canvas for generating the flag cloth texture image
     const textureCanvas = document.createElement("canvas");
