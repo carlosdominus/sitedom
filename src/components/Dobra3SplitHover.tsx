@@ -89,7 +89,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           className={`
             relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
             transition-[flex,opacity,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
-            border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:py-0
+            border-b md:border-b-0 md:border-r border-white/10 group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:pt-24 md:pb-12
             ${
               activeMobilePanel === "left" 
                 ? "shadow-[inset_0_0_50px_rgba(65,242,10,0.25)] border-[#41F20A]/40 md:border-white/10" 
@@ -130,7 +130,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               highlights={["juros compostos"]}
               className={`
                 font-heading font-extrabold text-white tracking-tight leading-tight transition-all duration-500
-                ${hoveredPanel === "right" ? "text-xl md:text-3xl" : "text-3xl sm:text-4xl md:text-5xl lg:text-6xl"}
+                ${hoveredPanel === "right" ? "text-xl md:text-2xl" : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl"}
               `}
             />
 
@@ -175,7 +175,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
           className={`
             relative w-full md:w-auto min-h-[55vh] md:min-h-0 md:h-full overflow-hidden cursor-pointer
             transition-[flex,opacity,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
-            group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:py-0
+            group flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 text-center py-14 md:pt-24 md:pb-12
             ${
               activeMobilePanel === "right" 
                 ? "shadow-[inset_0_0_50px_rgba(65,242,10,0.25)] border-[#41F20A]/40" 
@@ -216,7 +216,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               highlights={["multiplique seus resultados"]}
               className={`
                 font-heading font-extrabold text-white tracking-tight leading-tight transition-all duration-500
-                ${hoveredPanel === "left" ? "text-xl md:text-3xl" : "text-3xl sm:text-4xl md:text-5xl lg:text-6xl"}
+                ${hoveredPanel === "left" ? "text-xl md:text-2xl" : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl"}
               `}
             />
 

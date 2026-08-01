@@ -155,62 +155,39 @@ export function AnimatedText({
 
   const tokens = tokenizeText(text, highlights);
 
-  // Group consecutive highlighted tokens into whitespace-nowrap phrase wrappers
-  const groupedTokens: { isHighlighted: boolean; words: { word: string; originalIndex: number }[] }[] = [];
-  tokens.forEach(({ word, isHighlighted }, idx) => {
-    const lastGroup = groupedTokens[groupedTokens.length - 1];
-    if (lastGroup && lastGroup.isHighlighted === isHighlighted) {
-      lastGroup.words.push({ word, originalIndex: idx });
-    } else {
-      groupedTokens.push({
-        isHighlighted,
-        words: [{ word, originalIndex: idx }],
-      });
-    }
-  });
-
   return (
-    <Component ref={ref as any} className={className}>
-      {groupedTokens.map((group, gIdx) => {
-        if (group.isHighlighted) {
+    <Component ref={ref as any} className={`break-words max-w-full ${className}`}>
+      {tokens.map(({ word, isHighlighted }, idx) => {
+        const delay = initialDelayMs + idx * staggerMs;
+        if (isHighlighted) {
           return (
-            <span key={gIdx} className="inline-block whitespace-nowrap">
-              {group.words.map(({ word, originalIndex }) => {
-                const delay = initialDelayMs + originalIndex * staggerMs;
-                return (
-                  <InteractiveGreenWord
-                    key={originalIndex}
-                    word={word}
-                    isVisible={isVisible}
-                    delay={delay}
-                    prefersReducedMotion={prefersReducedMotion}
-                    customClassName={highlightClassName}
-                  />
-                );
-              })}
-            </span>
+            <InteractiveGreenWord
+              key={idx}
+              word={word}
+              isVisible={isVisible}
+              delay={delay}
+              prefersReducedMotion={prefersReducedMotion}
+              customClassName={highlightClassName}
+            />
           );
         }
 
-        return group.words.map(({ word, originalIndex }) => {
-          const delay = initialDelayMs + originalIndex * staggerMs;
-          return (
-            <span
-              key={originalIndex}
-              className="inline-block mr-[0.25em]"
-              style={{
-                opacity: isVisible || prefersReducedMotion ? 1 : 0,
-                transform: isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
-                filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
-                transition: prefersReducedMotion
-                  ? "none"
-                  : `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
-              }}
-            >
-              {word}
-            </span>
-          );
-        });
+        return (
+          <span
+            key={idx}
+            className="inline-block mr-[0.25em]"
+            style={{
+              opacity: isVisible || prefersReducedMotion ? 1 : 0,
+              transform: isVisible || prefersReducedMotion ? "translateY(0)" : "translateY(16px)",
+              filter: isVisible || prefersReducedMotion ? "blur(0px)" : "blur(4px)",
+              transition: prefersReducedMotion
+                ? "none"
+                : `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms, filter 0.6s ease-out ${delay}ms`,
+            }}
+          >
+            {word}
+          </span>
+        );
       })}
     </Component>
   );
