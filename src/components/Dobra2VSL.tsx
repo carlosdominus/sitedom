@@ -149,7 +149,7 @@ export default function Dobra2VSL() {
         <div className="relative z-10 max-w-[920px] mx-auto text-center space-y-6 sm:space-y-8 px-4 py-4">
           
           {/* 1. Eyebrow */}
-          <div className="text-[#41F20A] text-lg sm:text-2xl md:text-3xl font-extrabold tracking-[0.25em] font-heading drop-shadow-[0_0_15px_rgba(65,242,10,0.4)]">
+          <div className="text-[#41F20A] text-lg sm:text-2xl md:text-3xl font-extrabold tracking-[0.25em] font-sans drop-shadow-[0_0_15px_rgba(65,242,10,0.4)]">
             <AnimatedText
               text={eyebrowText}
               as="span"
@@ -160,7 +160,7 @@ export default function Dobra2VSL() {
           <AnimatedText
             as="h2"
             text={headlineText}
-            className="text-[clamp(1.7rem,4.2vw,3.2rem)] font-heading font-extrabold text-white leading-snug tracking-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
+            className="text-[clamp(1.7rem,4.2vw,3.2rem)] font-bold text-white leading-snug sm:leading-normal tracking-normal drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
             initialDelayMs={150}
           />
 
@@ -169,7 +169,7 @@ export default function Dobra2VSL() {
             as="p"
             text={paragraphText}
             highlights={paragraphHighlights}
-            className="text-zinc-200 text-base sm:text-xl md:text-2xl lg:text-3xl font-sans leading-relaxed max-w-4xl mx-auto font-medium drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
+            className="text-zinc-200 text-base sm:text-xl md:text-2xl lg:text-3xl font-sans leading-relaxed max-w-4xl mx-auto font-normal sm:font-medium tracking-normal drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
             initialDelayMs={300}
           />
 

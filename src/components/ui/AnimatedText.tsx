@@ -97,7 +97,7 @@ function InteractiveGreenWord({
   return (
     <span
       ref={spanRef}
-      className={`inline-block mr-[0.22em] font-heading font-black text-[1.12em] select-none text-transparent bg-clip-text bg-[length:220%_auto] transition-all duration-200 ${customClassName}`}
+      className={`inline-block mr-[0.22em] font-semibold sm:font-bold select-none text-transparent bg-clip-text bg-[length:220%_auto] transition-all duration-200 ${customClassName}`}
       style={{
         backgroundImage:
           "linear-gradient(110deg, #2bb102 0%, #41F20A 30%, #c4ff9e 50%, #41F20A 70%, #1a8300 100%)",
@@ -119,7 +119,7 @@ export function AnimatedText({
   as: Component = "p",
   className = "",
   highlights = [],
-  highlightClassName = "font-heading font-black text-[1.12em] sm:text-[1.18em]",
+  highlightClassName = "font-semibold sm:font-bold",
   staggerMs = 35,
   initialDelayMs = 0,
   threshold = 0.2,
