@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { X, ChevronLeft, Check, CheckCircle2, ArrowLeft, ArrowRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X, ChevronLeft, Check, CheckCircle2, ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { LiquidMetalButton } from "./ui/liquid-metal-button";
 
 interface FormTimeModalProps {
@@ -7,9 +7,12 @@ interface FormTimeModalProps {
   onClose: () => void;
 }
 
+const WEBHOOK_URL = "https://nen.auto-jornada.space/webhook/forms-site";
+
 export default function FormTimeModal({ isOpen, onClose }: FormTimeModalProps) {
   const [step, setStep] = useState<number>(1);
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // Form State
   const [area, setArea] = useState<string>("Tráfego Pago / Media Buyer");
@@ -18,6 +21,18 @@ export default function FormTimeModal({ isOpen, onClose }: FormTimeModalProps) {
   const [whatsapp, setWhatsapp] = useState<string>("");
   const [portfolio, setPortfolio] = useState<string>("");
   const [mensagem, setMensagem] = useState<string>("");
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -36,9 +51,50 @@ export default function FormTimeModal({ isOpen, onClose }: FormTimeModalProps) {
     }
   };
 
-  const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
+  const sendWebhook = async () => {
+    const payload = {
+      tipo_formulario: "Time / Colaborador (Candidatura)",
+      categoria: "Recrutamento / Carreira",
+      origem: "Site DOMINUS - Formulário Fazer Parte do Time",
+      timestamp: new Date().toISOString(),
+      data_formatada: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }),
+      dados_resposta: {
+        nome,
+        email,
+        whatsapp,
+        area_atuacao: area,
+        portfolio_linkedin: portfolio,
+        mensagem_cases: mensagem || "Não informada",
+      },
+      metadata: {
+        page_url: typeof window !== "undefined" ? window.location.href : "",
+        user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+        language: typeof navigator !== "undefined" ? navigator.language : "",
+        screen_width: typeof window !== "undefined" ? window.innerWidth : 0,
+        screen_height: typeof window !== "undefined" ? window.innerHeight : 0,
+      }
+    };
+
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error("Erro ao enviar dados ao webhook:", err);
+    }
+  };
+
+  const handleSubmit = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e) e.preventDefault();
     if (!nome.trim() || !email.trim() || !whatsapp.trim() || !portfolio.trim()) return;
+
+    setIsSubmitting(true);
+    await sendWebhook();
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 
@@ -70,13 +126,13 @@ export default function FormTimeModal({ isOpen, onClose }: FormTimeModalProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/95 backdrop-blur-3xl animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto overflow-x-hidden bg-black/95 backdrop-blur-3xl animate-in fade-in duration-300">
       
       {/* Background glow effect */}
-      <div className="absolute w-[500px] h-[500px] bg-[#41F20A]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] max-w-full bg-[#41F20A]/10 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none" />
 
       {/* Container do Modal */}
-      <div className="relative w-full max-w-lg sm:max-w-xl bg-[#090a0e] border border-zinc-800/90 rounded-[2.5rem] p-6 sm:p-10 shadow-[0_0_120px_rgba(0,0,0,0.9)] my-auto flex flex-col min-h-[520px] justify-between z-10">
+      <div className="relative w-full max-w-lg sm:max-w-xl bg-[#090a0e] border border-zinc-800/90 rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 shadow-[0_0_120px_rgba(0,0,0,0.9)] my-auto flex flex-col min-h-[480px] sm:min-h-[520px] justify-between z-10 box-border overflow-hidden">
         
         {/* Top Header Navigation & Segmented Progress Bar */}
         <div className="space-y-6">
@@ -292,9 +348,9 @@ export default function FormTimeModal({ isOpen, onClose }: FormTimeModalProps) {
 
         {/* Bottom CTA Button with Liquid Metal Pill */}
         {!submitted && (
-          <div className="pt-6 mt-6 border-t border-zinc-900/80 flex justify-center">
+          <div className="pt-6 mt-6 border-t border-zinc-900/80 flex justify-center w-full max-w-full">
             {step < totalSteps ? (
-              <div className={!canContinue() ? "opacity-50 pointer-events-none transition" : "transition"}>
+              <div className={!canContinue() ? "opacity-50 pointer-events-none transition w-full flex justify-center" : "transition w-full flex justify-center"}>
                 <LiquidMetalButton
                   label="CONTINUAR"
                   icon={<ArrowRight size={14} className="text-[#41F20A]" />}
@@ -303,10 +359,10 @@ export default function FormTimeModal({ isOpen, onClose }: FormTimeModalProps) {
                 />
               </div>
             ) : (
-              <div className={!canContinue() ? "opacity-50 pointer-events-none transition" : "transition"}>
+              <div className={!canContinue() || isSubmitting ? "opacity-50 pointer-events-none transition w-full flex justify-center" : "transition w-full flex justify-center"}>
                 <LiquidMetalButton
-                  label="ENVIAR CANDIDATURA"
-                  icon={<ArrowRight size={14} className="text-[#41F20A]" />}
+                  label={isSubmitting ? "ENVIANDO..." : "ENVIAR CANDIDATURA"}
+                  icon={isSubmitting ? <Loader2 size={14} className="text-[#41F20A] animate-spin" /> : <ArrowRight size={14} className="text-[#41F20A]" />}
                   onClick={handleSubmit}
                   width={300}
                 />

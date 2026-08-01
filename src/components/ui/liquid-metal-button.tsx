@@ -184,11 +184,12 @@ export function LiquidMetalButton({
   const Element = href ? "a" : "button";
 
   return (
-    <div className={`relative inline-block select-none ${className}`}>
+    <div className={`relative inline-flex justify-center max-w-full select-none ${className}`}>
       <div
         style={{
           position: "relative",
           width: `${dimensions.width}px`,
+          maxWidth: "100%",
           height: `${dimensions.height}px`,
           transition: "width 0.4s ease, height 0.4s ease",
         }}
@@ -199,7 +200,8 @@ export function LiquidMetalButton({
             position: "absolute",
             top: 0,
             left: 0,
-            width: `${dimensions.width}px`,
+            width: "100%",
+            maxWidth: "100%",
             height: `${dimensions.height}px`,
             zIndex: 10,
             borderRadius: "100px",
@@ -219,8 +221,8 @@ export function LiquidMetalButton({
               borderRadius: "100px",
               overflow: "hidden",
               position: "relative",
-              width: `${dimensions.shaderWidth}px`,
-              maxWidth: `${dimensions.shaderWidth}px`,
+              width: "100%",
+              maxWidth: "100%",
               height: `${dimensions.shaderHeight}px`,
             }}
           />
@@ -232,8 +234,8 @@ export function LiquidMetalButton({
             position: "absolute",
             top: "2px",
             left: "2px",
-            width: `${dimensions.innerWidth}px`,
-            height: `${dimensions.innerHeight}px`,
+            right: "2px",
+            bottom: "2px",
             borderRadius: "100px",
             background: isHovered
               ? "linear-gradient(180deg, #182a12 0%, #060e03 100%)"
@@ -261,7 +263,8 @@ export function LiquidMetalButton({
             position: "absolute",
             top: 0,
             left: 0,
-            width: `${dimensions.width}px`,
+            width: "100%",
+            maxWidth: "100%",
             height: `${dimensions.height}px`,
             background: "transparent",
             border: "none",
