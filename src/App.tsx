@@ -81,13 +81,13 @@ export default function App() {
       <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 pt-2 sm:pt-4 pb-2 transition-[padding] duration-300">
         <header 
           style={{
-            WebkitBackdropFilter: scrolled ? "blur(14px)" : "blur(8px)",
-            backdropFilter: scrolled ? "blur(14px)" : "blur(8px)",
+            WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
+            backdropFilter: scrolled ? "blur(14px)" : "none",
           }}
           className={`max-w-6xl mx-auto rounded-2xl sm:rounded-full transition-[background-color,border-color,padding,box-shadow] duration-500 ${
             scrolled 
               ? "bg-black/75 sm:bg-black/50 border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.8)] py-2 sm:py-2.5 px-4 sm:px-6" 
-              : "bg-black/30 sm:bg-transparent border border-white/10 sm:border-transparent py-2 sm:py-4 px-4 sm:px-8"
+              : "bg-transparent border border-transparent shadow-none py-2 sm:py-4 px-4 sm:px-8"
           }`}
         >
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
