@@ -30,7 +30,7 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger: activates hover state automatically as user scrolls down on mobile with rAF throttling
+  // Mobile scroll trigger with hysteresis to prevent state oscillation/flicker
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -51,16 +51,29 @@ export default function RevenueComparisonCards() {
             const dist1 = Math.abs(center1 - viewportCenter);
             const dist2 = Math.abs(center2 - viewportCenter);
 
-            // Only trigger hover panel when the card is within the center focus zone of the screen
-            const maxTriggerDistance = window.innerHeight * 0.3;
+            const enterDist = window.innerHeight * 0.22;
+            const exitDist = window.innerHeight * 0.38;
 
-            if (dist2 < maxTriggerDistance && dist2 <= dist1) {
-              setHoveredCard(2);
-            } else if (dist1 < maxTriggerDistance) {
-              setHoveredCard(1);
-            } else {
-              setHoveredCard(null);
-            }
+            setHoveredCard((prev) => {
+              if (prev === 1) {
+                if (dist1 > exitDist) {
+                  if (dist2 < enterDist) return 2;
+                  return null;
+                }
+                return 1;
+              }
+              if (prev === 2) {
+                if (dist2 > exitDist) {
+                  if (dist1 < enterDist) return 1;
+                  return null;
+                }
+                return 2;
+              }
+              // Currently null
+              if (dist1 < enterDist && dist1 <= dist2) return 1;
+              if (dist2 < enterDist) return 2;
+              return null;
+            });
           }
           ticking = false;
         });
@@ -261,7 +274,7 @@ export default function RevenueComparisonCards() {
                   Trajetória de faturamento
                 </span>
                 <p className="text-sm font-sans text-white font-medium leading-snug">
-                  Estrutura pensada para escalar até 7 dígitos por mês.
+                  Estrutura pensada para escalar pelo menos 7 dígitos por mês.
                 </p>
               </div>
             </div>
