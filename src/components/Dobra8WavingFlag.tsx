@@ -55,7 +55,7 @@ export default function Dobra8WavingFlag() {
 
       // 3. Draw Dominus White Logo in Center
       const logoImg = new Image();
-      logoImg.src = "https://i.ibb.co/chkPHKnw/logo-extensa-branca.webp";
+      logoImg.src = "https://dominus.site/image/logo-extensa-branca.webp";
       
       const renderLogoAndText = () => {
         const logoWidth = 580;

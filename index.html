@@ -1,15 +1,34 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dominus.site</title>
+    <title>DOMINUS | Estratégia, Escala e Resposta Direta</title>
+    <meta name="description" content="Conectamos o poder da autoridade à estratégia de marketing de resposta direta. Estruturas de tráfego, oferta e conversão para escala previsível." />
+    
+    <!-- Open Graph SEO -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="DOMINUS | Estratégia, Escala e Resposta Direta" />
+    <meta property="og:description" content="Conectamos o poder da autoridade à estratégia de marketing de resposta direta. Estruturas de tráfego, oferta e conversão para escala previsível." />
+    <meta property="og:image" content="https://dominus.site/image/bk.webp" />
+
     <link rel="icon" type="image/png" href="https://dominus.site/slides/mariana/img/favicon.png" />
+
+    <!-- 1. Preconnects (Dominus host first) -->
+    <link rel="preconnect" href="https://dominus.site">
     <link rel="preconnect" href="https://api.fontshare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://api.fontshare.com/v2/css?f[]=nohemi@900,800,700,600,500,400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- 2. LCP Image Preload -->
+    <link rel="preload" as="image" href="https://dominus.site/image/bk.webp" fetchpriority="high">
+
+    <!-- 3. Async Fonts (Non-render-blocking with reduced weights) -->
+    <link rel="preload" href="https://api.fontshare.com/v2/css?f[]=nohemi@900,800,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=nohemi@900,800,700&display=swap"></noscript>
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"></noscript>
   </head>
   <body>
     <div id="root"></div>

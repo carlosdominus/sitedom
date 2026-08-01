@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
-import { Mail } from "lucide-react";
+import { useState, useEffect, lazy, Suspense } from "react";
 
 import Dobra1Hero from "./components/Dobra1Hero";
-import Dobra2VSL from "./components/Dobra2VSL";
-import DobraSobreNos from "./components/DobraSobreNos";
-import Dobra3SplitHover from "./components/Dobra3SplitHover";
-import Dobra8WavingFlag from "./components/Dobra8WavingFlag";
-import Footer from "./components/Footer";
-import FormTimeModal from "./components/FormTimeModal";
-import FormParceiroModal from "./components/FormParceiroModal";
+
+// Code-splitting below-the-fold sections
+const Dobra2VSL = lazy(() => import("./components/Dobra2VSL"));
+const Dobra3SplitHover = lazy(() => import("./components/Dobra3SplitHover"));
+const DobraSobreNos = lazy(() => import("./components/DobraSobreNos"));
+const Dobra8WavingFlag = lazy(() => import("./components/Dobra8WavingFlag"));
+const Footer = lazy(() => import("./components/Footer"));
+const FormTimeModal = lazy(() => import("./components/FormTimeModal"));
+const FormParceiroModal = lazy(() => import("./components/FormParceiroModal"));
 
 export default function App() {
   const [scrolled, setScrolled] = useState<boolean>(false);
@@ -30,7 +31,7 @@ export default function App() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
-  // Monitor scroll state for some header dynamic opacity adjustments
+  // Monitor scroll state for header dynamic styling
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 40) {
@@ -83,8 +84,12 @@ export default function App() {
             {/* DOMINUS White Premium Logo - Centered on mobile */}
             <a href="#faturamento" className="flex items-center justify-center transition">
               <img 
-                src="https://i.ibb.co/chkPHKnw/logo-extensa-branca.webp" 
-                alt="DOMINUS" 
+                src="https://dominus.site/image/logo-extensa-branca.webp" 
+                alt="DOMINUS"
+                width={157}
+                height={28}
+                fetchPriority="high"
+                decoding="async"
                 referrerPolicy="no-referrer"
                 className="h-5 sm:h-7 w-auto object-contain brightness-105 active:scale-95 transition-transform"
               />
@@ -113,12 +118,12 @@ export default function App() {
         {/* Glow Effects backdrop layout */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[50vh] bg-zinc-900/20 rounded-full blur-[160px] pointer-events-none" />
         
-        {/* 1st dob - Faturamento / Intro */}
+        {/* 1st dob - Faturamento / Intro (Eagerly Loaded LCP Section) */}
         <section 
           id="faturamento" 
           className="scroll-mt-28 pt-24 pb-12 md:pt-32 md:pb-20 bg-cover bg-center bg-no-repeat relative"
           style={{
-            backgroundImage: "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 1) 100%), url('https://dominus.site/slides/mariana/img/bk.png')"
+            backgroundImage: "linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 1) 100%), url('https://dominus.site/image/bk.webp')"
           }}
         >
           {/* Subtle glow underneath */}
@@ -136,39 +141,50 @@ export default function App() {
 
         {/* 2nd dob - Onde Atuamos */}
         <section id="onde-atuamos" className="scroll-mt-20 py-2 sm:py-6 md:py-12 bg-black relative">
-          <Dobra2VSL />
+          <Suspense fallback={<div className="min-h-[600px] bg-black" />}>
+            <Dobra2VSL />
+          </Suspense>
         </section>
 
         {/* 3rd dob - Full-Width Hover Split Screen (Trabalhe Conosco / Colaboradores vs Autoridades) */}
-        <Dobra3SplitHover 
-          onOpenFormTime={openFormTime}
-          onOpenFormParceiro={openFormParceiro}
-        />
+        <Suspense fallback={<div id="trabalhe-conosco" className="min-h-[650px] bg-black" />}>
+          <Dobra3SplitHover 
+            onOpenFormTime={openFormTime}
+            onOpenFormParceiro={openFormParceiro}
+          />
+        </Suspense>
 
         {/* 4th dob - Sobre Nós Section */}
-        <DobraSobreNos />
+        <Suspense fallback={<div id="sobre-nos" className="min-h-[800px] bg-black" />}>
+          <DobraSobreNos />
+        </Suspense>
 
         {/* 5th dob - Interactive Waving Flag */}
-        <Dobra8WavingFlag />
+        <Suspense fallback={<div className="min-h-[400px] bg-black" />}>
+          <Dobra8WavingFlag />
+        </Suspense>
 
       </main>
 
       {/* Modern Dark Mode Footer */}
-      <Footer 
-        onOpenFormTime={openFormTime}
-        onOpenFormParceiro={openFormParceiro}
-      />
+      <Suspense fallback={<div className="min-h-[200px] bg-[#0a0a0a]" />}>
+        <Footer 
+          onOpenFormTime={openFormTime}
+          onOpenFormParceiro={openFormParceiro}
+        />
+      </Suspense>
 
       {/* Modals para os Formulários */}
-      <FormTimeModal 
-        isOpen={activeFormModal === "time"} 
-        onClose={closeModal} 
-      />
-
-      <FormParceiroModal 
-        isOpen={activeFormModal === "parceiro"} 
-        onClose={closeModal} 
-      />
+      <Suspense fallback={null}>
+        <FormTimeModal 
+          isOpen={activeFormModal === "time"} 
+          onClose={closeModal} 
+        />
+        <FormParceiroModal 
+          isOpen={activeFormModal === "parceiro"} 
+          onClose={closeModal} 
+        />
+      </Suspense>
 
     </div>
   );

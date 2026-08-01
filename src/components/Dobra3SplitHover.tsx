@@ -85,7 +85,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               ${activeMobilePanel === "left" ? "scale-115 md:scale-100" : "scale-100"}
             `}
             style={{
-              backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80')"
+              backgroundImage: "url('https://dominus.site/image/card1.webp')"
             }}
           />
           <div 
@@ -173,7 +173,7 @@ export default function Dobra3SplitHover({ onOpenFormTime, onOpenFormParceiro }:
               ${activeMobilePanel === "right" ? "scale-115 md:scale-100" : "scale-100"}
             `}
             style={{
-              backgroundImage: "url('https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80')"
+              backgroundImage: "url('https://dominus.site/image/card2.webp')"
             }}
           />
           <div 

@@ -48,8 +48,12 @@ export default function Footer({ onOpenFormTime, onOpenFormParceiro }: FooterPro
               aria-label="Ir para o topo - Dominus"
             >
               <img
-                src="https://i.ibb.co/chkPHKnw/logo-extensa-branca.webp"
+                src="https://dominus.site/image/logo-extensa-branca.webp"
                 alt="Dominus Logo"
+                width={540}
+                height={96}
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
                 className="h-16 sm:h-20 md:h-[96px] w-auto object-contain brightness-100 group-hover:brightness-110 transition duration-300"
               />
