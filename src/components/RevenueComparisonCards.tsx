@@ -278,7 +278,7 @@ export default function RevenueComparisonCards() {
               Com estrutura, o crescimento não para
             </h3>
             <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed text-center">
-              Tráfego, oferta, copy e conversão trabalhando juntos rumo à meta de R$ 1 milhão por mês.
+              Tráfego, oferta, copy e conversão trabalhando juntos para dominar o mercado
             </p>
           </div>
         </div>
