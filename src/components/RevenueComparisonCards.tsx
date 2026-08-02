@@ -32,7 +32,7 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger: activates text overlay & animation when card is in viewport focus zone, deactivates cleanly when scrolled past or back up
+  // Mobile scroll trigger: activates text overlay & animation when card center is in viewport focus zone (18% to 68% of viewport)
   useEffect(() => {
     if (window.innerWidth >= 768) return;
 
@@ -43,19 +43,20 @@ export default function RevenueComparisonCards() {
         window.requestAnimationFrame(() => {
           if (card1Ref.current && card2Ref.current) {
             const vh = window.innerHeight;
-            const focusTopThreshold = vh * 0.70;
-            const focusBottomThreshold = vh * 0.25;
+            const topBound = vh * 0.18;
+            const bottomBound = vh * 0.68;
 
             const rect1 = card1Ref.current.getBoundingClientRect();
             const rect2 = card2Ref.current.getBoundingClientRect();
 
-            // Card 1 active when in viewport focus zone
-            const is1InFocus = rect1.top < focusTopThreshold && rect1.bottom > focusBottomThreshold;
-            setMobileActive1(is1InFocus);
+            const center1 = rect1.top + rect1.height / 2;
+            const center2 = rect2.top + rect2.height / 2;
 
-            // Card 2 active when in viewport focus zone
-            const is2InFocus = rect2.top < focusTopThreshold && rect2.bottom > focusBottomThreshold;
-            setMobileActive2(is2InFocus);
+            // Card 1 active when its center is within the focus zone
+            setMobileActive1(center1 >= topBound && center1 <= bottomBound);
+
+            // Card 2 active when its center is within the focus zone
+            setMobileActive2(center2 >= topBound && center2 <= bottomBound);
           }
           ticking = false;
         });
@@ -64,9 +65,13 @@ export default function RevenueComparisonCards() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
     handleScroll(); // Initial check
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   const isCard1Active = hoveredCard === 1 || mobileActive1;
