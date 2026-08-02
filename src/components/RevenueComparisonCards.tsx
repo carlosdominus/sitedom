@@ -32,7 +32,7 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger: activates text overlay when scrolled down into card, keeps text visible when further down, reverts only when scrolling back up above threshold
+  // Mobile scroll trigger: activates text overlay & animation when card is in viewport focus zone, deactivates cleanly when scrolled past or back up
   useEffect(() => {
     if (window.innerWidth >= 768) return;
 
@@ -43,25 +43,19 @@ export default function RevenueComparisonCards() {
         window.requestAnimationFrame(() => {
           if (card1Ref.current && card2Ref.current) {
             const vh = window.innerHeight;
-            const triggerLineCard1 = vh * 0.65; // Card 1 triggers when scrolled into lower-middle
-            const triggerLineCard2 = vh * 0.42; // Card 2 triggers when scrolled into upper-middle (print 6 stage)
+            const focusTopThreshold = vh * 0.70;
+            const focusBottomThreshold = vh * 0.25;
 
             const rect1 = card1Ref.current.getBoundingClientRect();
             const rect2 = card2Ref.current.getBoundingClientRect();
 
-            // Card 1 text activates when scrolled down to Card 1
-            if (window.scrollY >= 40 && rect1.top < triggerLineCard1 && rect1.bottom > 0) {
-              setMobileActive1(true);
-            } else if (rect1.top >= triggerLineCard1) {
-              setMobileActive1(false);
-            }
+            // Card 1 active when in viewport focus zone
+            const is1InFocus = rect1.top < focusTopThreshold && rect1.bottom > focusBottomThreshold;
+            setMobileActive1(is1InFocus);
 
-            // Card 2 text activates when scrolled down to upper-middle (print 6 stage)
-            if (window.scrollY >= 40 && rect2.top < triggerLineCard2 && rect2.bottom > 0) {
-              setMobileActive2(true);
-            } else if (rect2.top >= triggerLineCard2) {
-              setMobileActive2(false);
-            }
+            // Card 2 active when in viewport focus zone
+            const is2InFocus = rect2.top < focusTopThreshold && rect2.bottom > focusBottomThreshold;
+            setMobileActive2(is2InFocus);
           }
           ticking = false;
         });
