@@ -1,9 +1,9 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig} from 'vite';
+import { defineConfig, type UserConfig } from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig((): UserConfig => {
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
@@ -18,11 +18,15 @@ export default defineConfig(() => {
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom'],
-            motion: ['motion'],
             icons: ['lucide-react'],
+            shaders: ['@paper-design/shaders'],
           },
         },
       },
+    },
+    esbuild: {
+      drop: ['console', 'debugger'],
+      legalComments: 'none',
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
