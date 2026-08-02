@@ -32,7 +32,7 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger: activates text overlay & animation when card center is in viewport focus zone (18% to 68% of viewport)
+  // Mobile scroll trigger: activates text overlay & animation when scrolling down past trigger threshold, keeps active when scrolling further down, reverts only when scrolling back up above threshold
   useEffect(() => {
     if (window.innerWidth >= 768) return;
 
@@ -43,20 +43,17 @@ export default function RevenueComparisonCards() {
         window.requestAnimationFrame(() => {
           if (card1Ref.current && card2Ref.current) {
             const vh = window.innerHeight;
-            const topBound = vh * 0.18;
-            const bottomBound = vh * 0.68;
+            const triggerLine1 = vh * 0.65; // Card 1 triggers when top reaches 65% of viewport
+            const triggerLine2 = vh * 0.60; // Card 2 triggers when top reaches 60% of viewport
 
             const rect1 = card1Ref.current.getBoundingClientRect();
             const rect2 = card2Ref.current.getBoundingClientRect();
 
-            const center1 = rect1.top + rect1.height / 2;
-            const center2 = rect2.top + rect2.height / 2;
+            // Card 1 active when scrolled down to/past triggerLine1 (remains active when scrolling further down)
+            setMobileActive1(rect1.top <= triggerLine1);
 
-            // Card 1 active when its center is within the focus zone
-            setMobileActive1(center1 >= topBound && center1 <= bottomBound);
-
-            // Card 2 active when its center is within the focus zone
-            setMobileActive2(center2 >= topBound && center2 <= bottomBound);
+            // Card 2 active when scrolled down to/past triggerLine2 (remains active when scrolling further down)
+            setMobileActive2(rect2.top <= triggerLine2);
           }
           ticking = false;
         });
