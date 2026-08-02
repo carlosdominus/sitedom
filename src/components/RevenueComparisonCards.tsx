@@ -32,7 +32,7 @@ export default function RevenueComparisonCards() {
     { label: "M8", defaultHeight: 98, hoverHeight: 138 },
   ];
 
-  // Mobile scroll trigger: activates text overlay & animation when scrolling down past trigger threshold, keeps active when scrolling further down, reverts only when scrolling back up above threshold
+  // Mobile scroll trigger: activates text overlay & animation when scrolling down past scrollY threshold, keeps active when scrolling further down, reverts when scrolling back up
   useEffect(() => {
     if (window.innerWidth >= 768) return;
 
@@ -41,20 +41,14 @@ export default function RevenueComparisonCards() {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (card1Ref.current && card2Ref.current) {
-            const vh = window.innerHeight;
-            const triggerLine1 = vh * 0.65; // Card 1 triggers when top reaches 65% of viewport
-            const triggerLine2 = vh * 0.60; // Card 2 triggers when top reaches 60% of viewport
+          const scrollY = window.scrollY || window.pageYOffset;
 
-            const rect1 = card1Ref.current.getBoundingClientRect();
-            const rect2 = card2Ref.current.getBoundingClientRect();
+          // Card 1 activates when scrollY >= 166, reverts when scrolling back up above 166
+          setMobileActive1(scrollY >= 166);
 
-            // Card 1 active when scrolled down to/past triggerLine1 (remains active when scrolling further down)
-            setMobileActive1(rect1.top <= triggerLine1);
+          // Card 2 activates when scrollY >= 438, reverts when scrolling back up above 438
+          setMobileActive2(scrollY >= 438);
 
-            // Card 2 active when scrolled down to/past triggerLine2 (remains active when scrolling further down)
-            setMobileActive2(rect2.top <= triggerLine2);
-          }
           ticking = false;
         });
         ticking = true;
